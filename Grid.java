@@ -18,19 +18,33 @@ public class Grid {
         return gameBoard[row][col];
     }
 
-    public void setState(Grid g) {
-        
-    }
 
-    public boolean isLegalPlacement(int row, int col) {
+    public boolean isLegalPlacement(int row, int col, int size, int Orientation) {
         // Implement better algorithm here
-        return !gameBoard[row][col].isOccupied();
+        // Check that all tiles below are clear
+        boolean Clear = true;
+        if (Orientation == 1) {
+            for (int i = 0; i < size; i++) {
+                if (gameBoard[row][col+i].isOccupied()) {
+                    Clear = false;
+                }
+
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (gameBoard[row+i][col].isOccupied()) {
+                    Clear = false;
+                }
+
+            }
+        }
+        return Clear;
     }
     
     // Future Methods
 }
 
-public class SelfGrid extends Grid {
+class SelfGrid extends Grid {
     
     private Ship[] ships; 
 
@@ -41,20 +55,22 @@ public class SelfGrid extends Grid {
     }
 
     private void initializeShips() {
-
+        int counter = 0;
         for (Ship.ShipType type : Ship.ShipType.values()) {
-            Ship ship = new Ship(type);
-            placeShipRandomly(ship);
+            ships[counter] = new Ship(type);
+            placeShipRandomly(ships[counter]);
+            counter++;
         }
     }
 
     private void placeShipRandomly(Ship ship) {
         // Placeholder Function
         int size = ship.getSize();
+        int Orientation = (int) (Math.random() * 2);
         int row = (int) (Math.random() * (10 - size + 1));
         int col = (int) (Math.random() * 10);
 
-        while (!isLegalPlacement(row, col)) {
+        while (!isLegalPlacement(row, col, size, Orientation)) {
             row = (int) (Math.random() * (10 - size + 1));
             col = (int) (Math.random() * 10);
         }
