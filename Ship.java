@@ -2,7 +2,23 @@ public class Ship {
     private boolean isSunk;
     private ShipType shipType;
     private int size;
-
+    enum ShipType {
+        DESTROYER(2),
+        SUBMARINE(3),
+        CRUISER(3),
+        BATTLESHIP(4),
+        CARRIER(5);
+    
+        private final int size;
+    
+        ShipType(int size) {
+            this.size = size;
+        }
+    
+        public int getSize() {
+            return size;
+        }
+    }
     public Ship(ShipType shipType) {
         this.shipType = shipType;
         this.size = shipType.getSize();
@@ -26,20 +42,3 @@ public class Ship {
     }
 }
 
-public enum ShipType {
-    DESTROYER(2),
-    SUBMARINE(3),
-    CRUISER(3),
-    BATTLESHIP(4),
-    CARRIER(5);
-
-    private final int size;
-
-    ShipType(int size) {
-        this.size = size;
-    }
-
-    public int getSize() {
-        return size;
-    }
-}
