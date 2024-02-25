@@ -14,6 +14,7 @@ public class Grid {
         }
     }
 
+    //Function that returns a specific tile of gameBoard
     public Tile getTile(int row, int col) {
         return gameBoard[row][col];
     }
