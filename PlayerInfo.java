@@ -1,12 +1,49 @@
 public class PlayerInfo {
-    int PlayerNumber;
-    int NumShips;
-    boolean GameStatus;
-    boolean TurnActive;
-    //2d array of ship status
-    //get and set fcts for ship status
-    //set turn status and get turn status
-    //set win status
+    private int playerNumber;
+    private int numShips;
+    private boolean gameStatus;
+    private boolean turnActive;
+    private boolean[][] shipStatus;  // 2D array to represent ship status
 
+    public PlayerInfo(int playerNumber, int numShips) {
+        this.playerNumber = playerNumber;
+        this.numShips = numShips;
+        this.gameStatus = false;
+        this.turnActive = false;
+        this.shipStatus = new boolean[numShips][2];  // Assuming each ship has two statuses: alive or sunk
+        initializeShipStatus();
+    }
 
+    private void initializeShipStatus() {
+        // Initialize ship status for each ship as alive
+        for (int i = 0; i < numShips; i++) {
+            shipStatus[i][0] = true;  // Alive
+            shipStatus[i][1] = false;  // Not sunk
+        }
+    }
+
+    public void setShipStatus(int shipIndex, boolean isAlive, boolean isSunk) {
+        shipStatus[shipIndex][0] = isAlive;
+        shipStatus[shipIndex][1] = isSunk;
+    }
+
+    public boolean[][] getShipStatus() {
+        return shipStatus;
+    }
+
+    public void setTurnStatus(boolean turnActive) {
+        this.turnActive = turnActive;
+    }
+
+    public boolean getTurnStatus() {
+        return turnActive;
+    }
+
+    public void setWinStatus(boolean gameStatus) {
+        this.gameStatus = gameStatus;
+    }
+
+    public boolean getWinStatus() {
+        return gameStatus;
+    }
 }
