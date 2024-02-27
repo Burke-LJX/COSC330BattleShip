@@ -2,9 +2,6 @@ public class Tile {
     private boolean isOccupied;
     private boolean isShot;
     private Ship.ShipType shipType;
-/*  Initialize JButton for players to click here?
-    Add actionListeners for clicks here?
-    Or functions to update tile based on listeners here? */
 
     public Tile() {
         this.isOccupied = false;
