@@ -1,7 +1,10 @@
+import javax.swing.JButton;
+
 public class Tile {
     private boolean isOccupied;
     private boolean isShot;
     private Ship.ShipType shipType;
+    private JButton buttonForTile;
 
     public Tile() {
         this.isOccupied = false;
@@ -28,5 +31,9 @@ public class Tile {
 
     public Ship.ShipType getShipType() {
         return shipType;
+    }
+
+    public JButton getTileButton() {
+        return buttonForTile;
     }
 }
