@@ -47,10 +47,10 @@ public class PlayerInfo {
         return gameStatus;
     }
 
-    public void updateShipStatus(int shipIndex) {
+    public void updateShipStatus(int shipIndex, PlayerGrid grid) {
         // Update ship status when a hit occurs
         if (shipIndex >= 0 && shipIndex < numShips) {
-            Ship hitShip = ships[shipIndex];
+            Ship hitShip = grid.ships[shipIndex];
             hitShip.registerHit();
             
             boolean isAlive = !hitShip.getIsSunk();
@@ -64,11 +64,9 @@ public class PlayerInfo {
     
             // Check if all ships are sunk
             boolean allShipsSunk = true;
-            for (int i = 0; i < numShips; i++) {
-                if (!ships[i].getIsSunk()) {
+            if (!grid.checkShips()) {
                     allShipsSunk = false;
                     break;
-                }
             }
     
             // Update game status if all ships are sunk
@@ -78,4 +76,12 @@ public class PlayerInfo {
             }
         }
     }
+
+    public boolean checkWin(PlayerGrid grid) {
+        if (!grid.checkShips()) {
+            return false;
+        }
+        return true;
+    }
+
 }
