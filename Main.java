@@ -19,7 +19,7 @@ public class Main {
             takeTurn(player1Grid, player2Grid, player1Info, player2Info, scanner);
 
             // Check if Player 2 has won
-            if (player1Info.checkWin()) {
+            if (player1Info.checkWin(player2Grid)) {
                 System.out.println("Player 1 wins!");
                 gameIsRunning = false;
                 break;
@@ -30,7 +30,7 @@ public class Main {
             takeTurn(player2Grid, player1Grid, player2Info, player1Info, scanner);
 
             // Check if Player 1 has won
-            if (player2Info.checkWin()) {
+            if (player2Info.checkWin(player1Grid)) {
                 System.out.println("Player 2 wins!");
                 gameIsRunning = false;
             }
@@ -45,12 +45,15 @@ public class Main {
         System.out.println("Enter row and column to attack (e.g., 3 4): ");
         int row = scanner.nextInt();
         int col = scanner.nextInt();
-
-        if (attackingGrid.attackTile(targetGrid, row, col)) {
-            System.out.println("Hit!");
-        } else {
-            System.out.println("Miss!");
+        while (attackingGrid.attackTile(targetGrid, row, col) != true) {
+            System.out.println("Enter another set of coordinates");
+            System.out.println("Enter row and column to attack (e.g., 3 4): ");
+            row = scanner.nextInt();
+            col = scanner.nextInt();
         }
+
+        
+
 
         Tile attackedTile = targetGrid.getTile(row, col);
         if (attackedTile.isOccupied()) {
