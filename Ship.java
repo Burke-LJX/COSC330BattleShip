@@ -2,7 +2,7 @@ public class Ship {
     private boolean isSunk;
     private ShipType shipType;
     private int size;
-    private int hitCount; // New variable to keep track of hits
+    private int hitCount; 
 
     enum ShipType {
         DESTROYER(2),
