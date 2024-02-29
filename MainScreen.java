@@ -79,6 +79,7 @@ public class MainScreen extends MouseAdapter{
 
             //Mouse click listeners on gridPanel to effect both enemy grid panel and fire button
             JPanel enemyDisplay = new JPanel(new GridBagLayout());
+            enemyDisplay.setBackground(Color.GRAY);
 
             //Creating/Displaying enemyGrid
             for(int row = 0; row < GRIDSIZE; row++) {
@@ -94,8 +95,22 @@ public class MainScreen extends MouseAdapter{
 
             /*Create enemyDisplay in enemyScreen (enemy ship list and fire button)
             */
-            JButton fireButton = new JButton();
             GridBagConstraints eDisplayConstraints = new GridBagConstraints();
+            eDisplayConstraints.insets = new Insets(10, 5, 5, 5);
+
+
+            JButton fireButton = new JButton();
+            fireButton.setBackground(Color.RED);
+            fireButton.setForeground(Color.WHITE);
+            fireButton.setText("Fire!");
+            fireButton.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+            eDisplayConstraints.anchor = GridBagConstraints.PAGE_END;
+
+            ClickListener eClickListener = new ClickListener();
+            fireButton.addMouseListener(eClickListener);
+
+            //Add fire button to enemyDisplay
+            enemyDisplay.add(fireButton, eDisplayConstraints);
 
             //Adds gridPanel and enemyDisplay to enemyScreen
             enemyScreen.add(gridPanel, SwingConstants.LEFT);
@@ -133,6 +148,26 @@ public class MainScreen extends MouseAdapter{
             //What happens when mouse is clicked
         }
 
+        //Function io initialize enemyShipDisplay
+        public void initializeEnemyShipDisplay(PlayerInfo player) {
+            /*
+             * run through enemy ships
+             * set all ship imgs to alive(light) view
+             */
+
+        }
+
+        //Function to update enemyShipDisplay
+        public void updateEnemyShipDisplay(PlayerInfo player) {
+            for(int i = 0; i < 5; i++) {
+                /*run through enemy ships
+                if ship is sunk, switch ship img to sunk(dark) view
+                */
+
+            }
+
+            return;
+        } 
 
         public static void main(String[] args) {
             // Create players and grids
@@ -142,3 +177,4 @@ public class MainScreen extends MouseAdapter{
             MainScreen game = new MainScreen(player1Grid, player2Grid);
         }
 }
+GRIDSIZE
