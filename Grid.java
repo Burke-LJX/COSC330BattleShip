@@ -36,7 +36,7 @@ public class Grid {
     }
 
     public boolean isLegalPlacement(int row, int col) {
-        // Implement your logic here
+        
         return !gameBoard[row][col].isOccupied();
     }
 }
@@ -55,6 +55,15 @@ class PlayerGrid extends Grid {
                 Ship ship = new Ship(type);
                 placeShipRandomly(ship);
             }
+        }
+
+        public boolean checkShips() {
+            for (int i = 0; i < 5; i++) {
+                if (ships[i].getIsSunk() == false) {
+                    return true;
+                }
+            }
+            return true;
         }
     
         private void placeShipRandomly(Ship ship) {
