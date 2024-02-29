@@ -1,55 +1,62 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
         // Create players and grids
-        SelfGrid player1Grid = new SelfGrid();
-        EnemyGrid player2Grid = new EnemyGrid();
+        PlayerGrid player1Grid = new PlayerGrid();
+        PlayerGrid player2Grid = new PlayerGrid();
 
         PlayerInfo player1Info = new PlayerInfo(1, 5);
         PlayerInfo player2Info = new PlayerInfo(2, 5);
 
-        
+        Scanner scanner = new Scanner(System.in);
 
-        // Example: Player 2 attacks Player 1's grid
-        System.out.println("Player 2 attacks Player 1's grid!");
-        player2Grid.attackTile(3, 4);
+        boolean gameIsRunning = true;
 
-        // Example: Check if the attacked tile contains a ship on Player 1's grid
-        Tile attackedTile = player1Grid.getTile(3, 4);
-        if (attackedTile.isOccupied()) {
-            System.out.println("Player 2 hit a ship on Player 1's grid!");
-            Ship.ShipType hitShipType = attackedTile.getShipType();
-            // Additional logic for handling hits can be added here
+        while (gameIsRunning) {
+            // Player 1's turn
+            System.out.println("Player 1, it's your turn!");
+            takeTurn(player1Grid, player2Grid, player1Info, player2Info, scanner);
+
+            // Check if Player 2 has won
+            if (player1Info.checkWin()) {
+                System.out.println("Player 1 wins!");
+                gameIsRunning = false;
+                break;
+            }
+
+            // Player 2's turn
+            System.out.println("Player 2, it's your turn!");
+            takeTurn(player2Grid, player1Grid, player2Info, player1Info, scanner);
+
+            // Check if Player 1 has won
+            if (player2Info.checkWin()) {
+                System.out.println("Player 2 wins!");
+                gameIsRunning = false;
+            }
+        }
+
+        scanner.close();
+    }
+
+    private static void takeTurn(PlayerGrid attackingGrid, PlayerGrid targetGrid,
+                                  PlayerInfo attackerInfo, PlayerInfo targetInfo, Scanner scanner) {
+        targetGrid.printGrid();
+        System.out.println("Enter row and column to attack (e.g., 3 4): ");
+        int row = scanner.nextInt();
+        int col = scanner.nextInt();
+
+        if (attackingGrid.attackTile(targetGrid, row, col)) {
+            System.out.println("Hit!");
         } else {
-            System.out.println("Player 2 missed on Player 1's grid!");
-            // Additional logic for handling misses can be added here
+            System.out.println("Miss!");
         }
 
-        // Example: Player 1 checks the status of their ships
-        boolean[][] player1ShipStatus = player1Info.getShipStatus();
-        System.out.println("Player 1's Ship Status:");
-        printShipStatus(player1ShipStatus);
-
-        // Example: Player 1 sets turn status
-        player1Info.setTurnStatus(false);
-
-        // Example: Player 2 sets win status
-        player2Info.setWinStatus(true);
-
-        // Example: Player 2 checks if they won
-        boolean player2WinStatus = player2Info.getWinStatus();
-        if (player2WinStatus) {
-            System.out.println("Player 2 wins!");
-        }
-        player1Grid.printShipLocations();
-
-    }
-
-    private static void printShipStatus(boolean[][] shipStatus) {
-        // Helper method to print ship status
-        for (int i = 0; i < shipStatus.length; i++) {
-            System.out.println("Ship " + (i + 1) + ": Alive - " + shipStatus[i][0] + ", Sunk - " + shipStatus[i][1]);
+        Tile attackedTile = targetGrid.getTile(row, col);
+        if (attackedTile.isOccupied()) {
+            Ship.ShipType hitShipType = attackedTile.getShipType();
+            System.out.println("You hit a " + hitShipType + "!");
+            attackerInfo.updateShipStatus(hitShipType);
         }
     }
-
-    
 }

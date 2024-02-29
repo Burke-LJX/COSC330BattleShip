@@ -46,4 +46,36 @@ public class PlayerInfo {
     public boolean getWinStatus() {
         return gameStatus;
     }
+
+    public void updateShipStatus(int shipIndex) {
+        // Update ship status when a hit occurs
+        if (shipIndex >= 0 && shipIndex < numShips) {
+            Ship hitShip = ships[shipIndex];
+            hitShip.registerHit();
+            
+            boolean isAlive = !hitShip.getIsSunk();
+            boolean isSunk = hitShip.getIsSunk();
+            
+            shipStatus[shipIndex][0] = isAlive;
+            shipStatus[shipIndex][1] = isSunk;
+    
+            System.out.println("Player " + playerNumber + " hit a " + hitShip.getShipType() +
+                    "! Ship Status - Alive: " + isAlive + ", Sunk: " + isSunk);
+    
+            // Check if all ships are sunk
+            boolean allShipsSunk = true;
+            for (int i = 0; i < numShips; i++) {
+                if (!ships[i].getIsSunk()) {
+                    allShipsSunk = false;
+                    break;
+                }
+            }
+    
+            // Update game status if all ships are sunk
+            if (allShipsSunk) {
+                gameStatus = true;
+                System.out.println("Player " + playerNumber + " has lost all ships. Game Over!");
+            }
+        }
+    }
 }
