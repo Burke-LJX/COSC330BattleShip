@@ -59,7 +59,7 @@ public class Main {
         if (attackedTile.isOccupied()) {
             Ship.ShipType hitShipType = attackedTile.getShipType();
             System.out.println("You hit a " + hitShipType + "!");
-            attackerInfo.updateShipStatus(hitShipType);
+            attackerInfo.updateShipStatus(hitShipType,targetGrid);
         }
     }
 }

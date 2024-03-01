@@ -42,7 +42,7 @@ public class Grid {
 }
 
 class PlayerGrid extends Grid {
-        private Ship[] ships;
+        public Ship[] ships;
     
         public PlayerGrid() {
             super();
@@ -63,7 +63,7 @@ class PlayerGrid extends Grid {
                     return true;
                 }
             }
-            return true;
+            return false;
         }
     
         private void placeShipRandomly(Ship ship) {
@@ -151,7 +151,7 @@ class PlayerGrid extends Grid {
                 return true;
             } else {
                 System.out.println("Miss!");
-                return false;
+                return true;
             }
         }
     }

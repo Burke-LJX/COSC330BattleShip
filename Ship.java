@@ -33,7 +33,7 @@ public class Ship {
         hitCount++;
         if (hitCount == size) {
             isSunk = true;
-        }
+            System.out.println(this.getShipType() + "has been sunk.");        }
     }
 
     public boolean getIsSunk() {
