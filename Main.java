@@ -42,15 +42,19 @@ public class Main {
     private static void takeTurn(PlayerGrid attackingGrid, PlayerGrid targetGrid,
                                   PlayerInfo attackerInfo, PlayerInfo targetInfo, Scanner scanner) {
         targetGrid.printGrid();
-        System.out.println("Enter row and column to attack (e.g., 3 4): ");
-        int row = scanner.nextInt();
-        int col = scanner.nextInt();
+        System.out.println("Enter row and column to attack (e.g., A 4): ");
+        char rowChar = scanner.next().charAt(0);
+        int row = Character.toUpperCase(rowChar) - 'A';
+        int col = scanner.nextInt() - 1;
+        
         while (attackingGrid.attackTile(targetGrid, row, col) != true) {
             System.out.println("Enter another set of coordinates");
-            System.out.println("Enter row and column to attack (e.g., 3 4): ");
-            row = scanner.nextInt();
-            col = scanner.nextInt();
+            System.out.println("Enter row and column to attack (e.g., A 4): ");
+            rowChar = scanner.next().charAt(0);
+            row = Character.toUpperCase(rowChar) - 'A';
+            col = scanner.nextInt() - 1;
         }
+        
 
         
 
