@@ -4,6 +4,10 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import Image.BattleshipImage;
+import Image.CarrierImage;
+import Image.SubmarineImage;
+
 
 //import Drag.java;
 
@@ -63,10 +67,62 @@ public class MainScreen extends MouseAdapter{
 
 
             //Create shipPanel in playerScreen
+            GridBagConstraints pShipPanelConstraints = new GridBagConstraints(); 
             Border shipPanelBorder = createShipPanelBorder();
             shipPanel.setBorder(shipPanelBorder);
             shipPanel.setBackground(Color.GRAY);
-            //NEED TO: Add ship images to shipPanel, add click listeners? to ship image icons?
+
+            //Set ship imageIcons to JLabels that are then added to shipPanel//
+            JLabel destroyerPic;
+            JLabel subPic;
+            JLabel cruiserPic;
+            JLabel battleshipPic;
+            JLabel carrierPic;
+
+            //Set imageIcons to specified JLabels
+            destroyerPic.setIcon(DestroyerImage.getShipImage());
+            subPic.setIcon(SubmarineImage.getShipImage());
+            cruiserPic.setIcon(CruiserImage.getShipImage());
+            battleshipPic.setIcon(BattleshipImage.getShipImage());
+            carrierPic.setIcon(CarrierImage.getShipImage());
+
+            //Add drag listeners to said JLabels
+            destroyerPic.addMouseListener(clickListener);
+            destroyerPic.addMouseMotionListener(dragListener);
+            subPic.addMouseListener(clickListener);
+            subPic.addMouseMotionListener(dragListener);
+            cruiserPic.addMouseListener(clickListener);
+            cruiserPic.addMouseMotionListener(dragListener);
+            battleshipPic.addMouseListener(clickListener);
+            battleshipPic.addMouseMotionListener(dragListener);
+            carrierPic.addMouseListener(clickListener);
+            carrierPic.addMouseMotionListener(dragListener);
+
+            //Add JLabels to ship panel in certain positions
+            pShipPanelConstraints.insets = new Insets(10, 5, 5, 5);
+            pShipPanelConstraints.anchor = GridBagConstraints.CENTER;
+            pShipPanelConstraints.weightx = .1;
+            shipPanel.add(destroyerPic, pShipPanelConstraints);
+
+            pShipPanelConstraints.insets = new Insets(0, 5, 5, 5);
+            pShipPanelConstraints.anchor = GridBagConstraints.CENTER;
+            pShipPanelConstraints.weightx = .2;
+            shipPanel.add(subPic, pShipPanelConstraints);
+
+            pShipPanelConstraints.insets = new Insets(0, 5, 5, 5);
+            pShipPanelConstraints.anchor = GridBagConstraints.CENTER;
+            pShipPanelConstraints.weightx = .2;
+            shipPanel.add(cruiserPic, pShipPanelConstraints);
+
+            pShipPanelConstraints.insets = new Insets(0, 5, 5, 5);
+            pShipPanelConstraints.anchor = GridBagConstraints.CENTER;
+            pShipPanelConstraints.weightx = .3;
+            shipPanel.add(battleshipPic, pShipPanelConstraints);
+
+            pShipPanelConstraints.insets = new Insets(0, 5, 5, 10);
+            pShipPanelConstraints.anchor = GridBagConstraints.CENTER;
+            pShipPanelConstraints.weightx = .4;
+            shipPanel.add(carrierPic, pShipPanelConstraints);
 
 
             //Adds pGrid and shipPanel to playerScreen
@@ -77,7 +133,7 @@ public class MainScreen extends MouseAdapter{
 
             //Create enemyScreen
 
-            //Mouse click listeners on gridPanel to effect both enemy grid panel and fire button
+            //Mouse click listeners on enemyDisplay to effect both enemy grid panel and fire button
             JPanel enemyDisplay = new JPanel(new GridBagLayout());
             enemyDisplay.setBackground(Color.GRAY);
 
@@ -95,8 +151,43 @@ public class MainScreen extends MouseAdapter{
 
             /*Create enemyDisplay in enemyScreen (enemy ship list and fire button)
             */
+
+            //Set ship imageIcons to JLabels that are then added to shipPanel//
+            JLabel eDestroyerPic;
+            JLabel eSubPic;
+            JLabel eCruiserPic;
+            JLabel eBattleshipPic;
+            JLabel eCarrierPic;
+ 
+            //Set imageIcons to specified JLabels
+            eDestroyerPic.setIcon(DestroyerImage.getShipImage());
+            eSubPic.setIcon(SubmarineImage.getShipImage());
+            eCruiserPic.setIcon(CruiserImage.getShipImage());
+            eBattleshipPic.setIcon(BattleshipImage.getShipImage());
+            eCarrierPic.setIcon(CarrierImage.getShipImage());
+
+            //Add JLabels to ship panel in certain positions
             GridBagConstraints eDisplayConstraints = new GridBagConstraints();
             eDisplayConstraints.insets = new Insets(10, 5, 5, 5);
+            eDisplayConstraints.anchor = GridBagConstraints.PAGE_START;
+            eDisplayConstraints.weightx = .4;
+            enemyDisplay.add(eCarrierPic, eDisplayConstraints);
+
+            eDisplayConstraints.insets = new Insets(0, 5, 5, 5);
+            eDisplayConstraints.weightx = .3;
+            enemyDisplay.add(eBattleshipPic, eDisplayConstraints);
+
+            eDisplayConstraints.insets = new Insets(0, 5, 5, 5);
+            eDisplayConstraints.weightx = .2;
+            enemyDisplay.add(eCruiserPic, eDisplayConstraints);
+
+            eDisplayConstraints.insets = new Insets(0, 5, 5, 5);
+            eDisplayConstraints.weightx = .2;
+            enemyDisplay.add(eSubPic, eDisplayConstraints);
+
+            eDisplayConstraints.insets = new Insets(0, 5, 5, 5);
+            eDisplayConstraints.weightx = .1;
+            enemyDisplay.add(eDestroyerPic, eDisplayConstraints);
 
 
             JButton fireButton = new JButton();
@@ -117,7 +208,9 @@ public class MainScreen extends MouseAdapter{
             enemyScreen.add(enemyDisplay, SwingConstants.RIGHT);
 
         }   //End of MainScreen constructor
+    
         
+    //eavesdropper thing in action listener?
     private class ClickListener extends MouseAdapter{
 	    public void mousePressed(MouseEvent event) {
 			prevPoint = event.getPoint();
@@ -148,14 +241,6 @@ public class MainScreen extends MouseAdapter{
             //What happens when mouse is clicked
         }
 
-        //Function io initialize enemyShipDisplay
-        public void initializeEnemyShipDisplay(PlayerInfo player) {
-            /*
-             * run through enemy ships
-             * set all ship imgs to alive(light) view
-             */
-
-        }
 
         //Function to update enemyShipDisplay
         public void updateEnemyShipDisplay(PlayerInfo player) {
@@ -177,4 +262,3 @@ public class MainScreen extends MouseAdapter{
             MainScreen game = new MainScreen(player1Grid, player2Grid);
         }
 }
-GRIDSIZE
