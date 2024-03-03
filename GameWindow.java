@@ -17,7 +17,6 @@ public class GameWindow {
         gameWindow.setVisible(true);
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameWindow.setLocationRelativeTo(null);
-        //gameWindow.setLayout(new BorderLayout());
 
         titleScreen = callTitleScreen();
         gameWindow.setContentPane(titleScreen);

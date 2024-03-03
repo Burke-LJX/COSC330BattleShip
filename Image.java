@@ -25,16 +25,18 @@ public class Image {
         DestroyerImage() {
         super();
         //Alive(Default) Image
-        file = new File(null);  //Put path to destroyer default img here
+        file = new File("C:\\Users\\1Emil\\Documents\\PERSONAL\\SCHOOL\\Salisbury\\COSC330 OO Programming\\Battleship Project\\COSC330BattleShip-main\\pDestroyerImg.png");
         bufferedImage = ImageIO.read(file);
         image = new ImageIcon(bufferedImage);
 
         //Sunk Image
-        File sunkFile = new File(null); //Put path to destroyer sunk img here
+        File sunkFile = new File("C:\\Users\\1Emil\\Documents\\PERSONAL\\SCHOOL\\Salisbury\\COSC330 OO Programming\\Battleship Project\\COSC330BattleShip-main\\pDestroyerImgSunk.png");
         BufferedImage bufferedSunkImage = ImageIO.read(sunkFile);
         ImageIcon sunkImage = new ImageIcon(bufferedSunkImage);
 
         }
+
+        //Enemy Images:
 
     }
 
@@ -42,16 +44,18 @@ public class Image {
         SubmarineImage() {
         super();
         //Alive(Default) Image
-        file = new File(null);  //Put path to sub default img here
+        file = new File("C:\\Users\\1Emil\\Documents\\PERSONAL\\SCHOOL\\Salisbury\\COSC330 OO Programming\\Battleship Project\\COSC330BattleShip-main\\pSubImg.png");  //Put path to sub default img here
         bufferedImage = ImageIO.read(file);
         image = new ImageIcon(bufferedImage);
 
         //Sunk Image
-        File sunkFile = new File(null); //Put path to sub sunk img here
+        File sunkFile = new File("C:\\Users\\1Emil\\Documents\\PERSONAL\\SCHOOL\\Salisbury\\COSC330 OO Programming\\Battleship Project\\COSC330BattleShip-main\\pSubImgSunk.png"); //Put path to sub sunk img here
         BufferedImage bufferedSunkImage = ImageIO.read(sunkFile);
         ImageIcon sunkImage = new ImageIcon(bufferedSunkImage);
 
         }
+        
+        //Enemy Images:
 
     }
 
@@ -59,15 +63,17 @@ public class Image {
         CruiserImage() {
         super();
         //Alive(Default) Image
-        file = new File(null);  //Put path to cruiser default img here
+        file = new File("C:\\Users\\1Emil\\Documents\\PERSONAL\\SCHOOL\\Salisbury\\COSC330 OO Programming\\Battleship Project\\COSC330BattleShip-main\\pCruiserImg.png");  //Put path to cruiser default img here
         bufferedImage = ImageIO.read(file);
         image = new ImageIcon(bufferedImage);
 
         //Sunk Image
-        File sunkFile = new File(null); //Put path to cruiser sunk img here
+        File sunkFile = new File("C:\\Users\\1Emil\\Documents\\PERSONAL\\SCHOOL\\Salisbury\\COSC330 OO Programming\\Battleship Project\\COSC330BattleShip-main\\pCruiserImgSunk.png"); //Put path to cruiser sunk img here
         BufferedImage bufferedSunkImage = ImageIO.read(sunkFile);
         ImageIcon sunkImage = new ImageIcon(bufferedSunkImage);
         }
+
+        //Enemy Images:
 
     }
 
@@ -75,30 +81,34 @@ public class Image {
         BattleshipImage() {
         super();
         //Alive(Default) Image
-        file = new File(null);  //Put path to sub default img here
+        file = new File("C:\\Users\\1Emil\\Documents\\PERSONAL\\SCHOOL\\Salisbury\\COSC330 OO Programming\\Battleship Project\\COSC330BattleShip-main\\pBattleshipImg.png");  //Put path to sub default img here
         bufferedImage = ImageIO.read(file);
         image = new ImageIcon(bufferedImage);
 
         //Sunk Image
-        File sunkFile = new File(null); //Put path to sub sunk img here
+        File sunkFile = new File("C:\\Users\\1Emil\\Documents\\PERSONAL\\SCHOOL\\Salisbury\\COSC330 OO Programming\\Battleship Project\\COSC330BattleShip-main\\pBattleshipImgSunk.png"); //Put path to sub sunk img here
         BufferedImage bufferedSunkImage = ImageIO.read(sunkFile);
         ImageIcon sunkImage = new ImageIcon(bufferedSunkImage);
         }
+
+        //Enemy Images:
     }
 
     class CarrierImage extends Image {
         CarrierImage() {
         super();
         //Alive(Default) Image
-        file = new File(null);  //Put path to sub default img here
+        file = new File("C:\\Users\\1Emil\\Documents\\PERSONAL\\SCHOOL\\Salisbury\\COSC330 OO Programming\\Battleship Project\\COSC330BattleShip-main\\pCarrierImg.png");  //Put path to sub default img here
         bufferedImage = ImageIO.read(file);
         image = new ImageIcon(bufferedImage);
 
         //Sunk Image
-        File sunkFile = new File(null); //Put path to sub sunk img here
+        File sunkFile = new File("C:\\Users\\1Emil\\Documents\\PERSONAL\\SCHOOL\\Salisbury\\COSC330 OO Programming\\Battleship Project\\COSC330BattleShip-main\\pCarrierImgSunk.png"); //Put path to sub sunk img here
         BufferedImage bufferedSunkImage = ImageIO.read(sunkFile);
         ImageIcon sunkImage = new ImageIcon(bufferedSunkImage);
         }
+
+        //Enemy Images:
     }
 
     	public static void main(String[] args) throws IOException {

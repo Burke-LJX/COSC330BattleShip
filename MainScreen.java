@@ -4,32 +4,28 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-import Image.BattleshipImage;
-import Image.CarrierImage;
-import Image.SubmarineImage;
+//import Image.BattleshipImage;
+//import Image.CarrierImage;
+//import Image.SubmarineImage;
 
 
 //import Drag.java;
 
         /*NOTES:
-            Add playerGrid to gridPanel or someway to display grid. Fix this!
-            Put listener on grid class that calls method to update/display grid?
-            Need graphics for Ship, tiles to make icons out of.
+            Fill out methods for listeners
+            Fix image icon paths
+            implement drag and drop on playerScreen
+            TEST
             click grid, check if hit/miss, update imgIcon, disable that specific button
         */
-public class MainScreen extends MouseAdapter{
+public class MainScreen {
         //Delcare and initialize panel to hold mainScreen
         JPanel mainScreen = new JPanel();
-
         //Declare and initialize a panel for player elements
-        JPanel playerScreen = new JPanel(new BorderLayout());
+        JSplitPane playerScreen = new JSplitPane();
         //Declare and initialize a panel for player elements
-        JPanel enemyScreen = new JPanel(new BorderLayout());
-        //Declare and initialize JPanels for the grid and ship register
-        JPanel gridPanel = new JPanel(new GridLayout());
-        JPanel shipPanel = new JPanel(new GridBagLayout());
+        JSplitPane enemyScreen = new JSplitPane();
         private final int GRIDSIZE = 10;
-        JButton[][] eBoard = new JButton[GRIDSIZE][GRIDSIZE];
     
         MainScreen() {
             mainScreen.setLayout(new BoxLayout(mainScreen, BoxLayout.PAGE_AXIS));
@@ -41,49 +37,199 @@ public class MainScreen extends MouseAdapter{
             mainScreen.add(playerScreen);
             mainScreen.add(Box.createRigidArea(new Dimension(0,5)));
 
+            mainScreenComponents();
+        }   //End of MainScreen constructor
+
+        public void mainScreenComponents() {
+           //Declaring and Initializing needed components and variables
+
+           //Declare and initialize JPanels for the grid and ship register
+           JPanel eGridPanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
+           JPanel eShipPanel = new JPanel(new GridBagLayout());
+           JPanel pGridPanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
+           JPanel pShipPanel = new JPanel(new GridBagLayout());
+
+           JButton[][] eBoard = new JButton[GRIDSIZE][GRIDSIZE];
+           JButton[][] pBoard = new JButton[GRIDSIZE][GRIDSIZE];
+
+           JLabel eDestroyerPic = new JLabel();
+           JLabel eSubPic = new JLabel();
+           JLabel eCruiserPic = new JLabel();
+           JLabel eBattleshipPic = new JLabel();
+           JLabel eCarrierPic = new JLabel();
+           JButton fireButton = new JButton();
+
+           JLabel destroyerPic = new JLabel();
+           JLabel subPic = new JLabel();
+           JLabel cruiserPic = new JLabel();
+           JLabel battleshipPic = new JLabel();
+           JLabel carrierPic = new JLabel();
+
+
+
+           //Create enemyScreen
+
+           enemyScreen.setDividerLocation(400);
+
+            //Creating/Displaying enemyGrid
+            for(int row = 0; row < GRIDSIZE; row++) {
+                for(int column = 0; column < GRIDSIZE; column++) {
+                    JButton buttonTile = new JButton();
+                    buttonTile.setBackground(Color.BLUE);
+                    eBoard[row][column] = buttonTile;
+                    buttonTile.addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent evt) {
+                            enemyButtonTileClicked(evt);
+                        }
+                    });
+
+                    eGridPanel.add(buttonTile);
+                }
+            }
+
+            //Add eGridPanel to enemyScreen left side
+            enemyScreen.setLeftComponent(eGridPanel);
+
+
+            //Creating/Displaying eShipPanel
+            eShipPanel.setBackground(Color.GRAY);
+            eShipPanel.setBorder(createShipPanelBorder());
+ 
+
+
+            //Customize JPanels as ship icons and add to eShipPanel
+            //Carrier:
+            eCarrierPic.setIcon(CarrierImage.getShipImage());
+            eCarrierPic.setFocusable(false);
+            GridBagConstraints gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 0;
+            eShipPanel.add(eCarrierPic, gridBagConstraints);
+
+            //Battleship: 
+            eBattleshipPic.setIcon(BattleshipImage.getShipImage());
+            eBattleshipPic.setFocusable(false);
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 1;
+            eShipPanel.add(eBattleshipPic, gridBagConstraints);
+
+            //Cruiser:
+            eCruiserPic.setIcon(CruiserImage.getShipImage());
+            eCruiserPic.setFocusable(false);
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 2;
+            eShipPanel.add(eCruiserPic, gridBagConstraints);
+
+            //Submarine:
+            eSubPic.setIcon(SubmarineImage.getShipImage());
+            eSubPic.setFocusable(false);
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 3;
+            eShipPanel.add(eSubPic, gridBagConstraints);
+
+            //Destroyer:
+            eDestroyerPic.setIcon(DestroyerImage.getShipImage());
+            eDestroyerPic.setFocusable(false);
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 4;
+            eShipPanel.add(eDestroyerPic, gridBagConstraints);
+
+
+            //Fire Button:
+            fireButton.setBorder(BorderFactory.createRaisedSoftBevelBorder());
+            fireButton.setBackground(Color.RED);
+            fireButton.setForeground(Color.WHITE);
+            fireButton.setFont(new Font("Arial", 1, 18));
+            fireButton.setText("Fire!");
+            fireButton.setOpaque(true);
+            fireButton.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    fireButtonMouseClick(e);
+                }
+            });
+
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 5;
+            eShipPanel.add(fireButton, gridBagConstraints);
+
+            //Add eShipPanel to enemyScreen right side
+            enemyScreen.setRightComponent(eShipPanel);
 
 
             //Creating playerScreen
-
-            //Creating/Displaying SelfGrid
-            JPanel pGrid = new JPanel(new GridLayout());
-            JButton[][] pBoard = new JButton[GRIDSIZE][GRIDSIZE];
-            for(int row = 0; row < GRIDSIZE; row++) {
-                for (int column = 0; column < GRIDSIZE; column++) {
-                    JButton buttonTile = new JButton();
-                    pBoard[row][column] = buttonTile;
-                    buttonTile.setBackground(Color.BLUE);
-
-                    pGrid.add(pBoard[row][column]);
-                }
-            }   //REMEMBER: to set pGrid to inactive after ship placement
 
             //Drag and Drop Listener Assignment to playerScreen
             ClickListener clickListener = new ClickListener();
             playerScreen.addMouseListener(clickListener);
             DragListener dragListener = new DragListener();
             playerScreen.addMouseMotionListener(dragListener);
+            
+            playerScreen.setDividerLocation(400);
+
+            //Creating/Displaying SelfGrid
+            for(int row = 0; row < GRIDSIZE; row++) {
+                for (int column = 0; column < GRIDSIZE; column++) {
+                    JButton buttonTile = new JButton();
+                    buttonTile.setBackground(Color.BLUE);
+                    pBoard[row][column] = buttonTile;
+
+                    pGridPanel.add(pBoard[row][column]);
+                }
+            }
+            //REMEMBER: to set pGrid to inactive after ship placement
+
+            //Add pGridPanel to playerScreen left side
+            playerScreen.setLeftComponent(pGridPanel);
 
 
             //Create shipPanel in playerScreen
-            GridBagConstraints pShipPanelConstraints = new GridBagConstraints(); 
-            Border shipPanelBorder = createShipPanelBorder();
-            shipPanel.setBorder(shipPanelBorder);
-            shipPanel.setBackground(Color.GRAY);
+            pShipPanel.setBorder(createShipPanelBorder());
+            pShipPanel.setBackground(Color.GRAY);
 
-            //Set ship imageIcons to JLabels that are then added to shipPanel//
-            JLabel destroyerPic;
-            JLabel subPic;
-            JLabel cruiserPic;
-            JLabel battleshipPic;
-            JLabel carrierPic;
-
-            //Set imageIcons to specified JLabels
+            //Destroyer:
             destroyerPic.setIcon(DestroyerImage.getShipImage());
+            destroyerPic.setFocusable(false);
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 1;
+            pShipPanel.add(destroyerPic, gridBagConstraints);
+
+            //Submarine:
             subPic.setIcon(SubmarineImage.getShipImage());
+            subPic.setFocusable(false);
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 2;
+            pShipPanel.add(subPic, gridBagConstraints);
+
+            //Cruiser:
             cruiserPic.setIcon(CruiserImage.getShipImage());
+            cruiserPic.setFocusable(false);
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 3;
+            pShipPanel.add(cruiserPic, gridBagConstraints);
+
+            //Battleship:
             battleshipPic.setIcon(BattleshipImage.getShipImage());
+            battleshipPic.setFocusable(false);
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 4;
+            pShipPanel.add(battleshipPic, gridBagConstraints);
+
+            //Carrier:
             carrierPic.setIcon(CarrierImage.getShipImage());
+            carrierPic.setFocusable(false);
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 5;
+            pShipPanel.add(carrierPic, gridBagConstraints);
 
             //Add drag listeners to said JLabels
             destroyerPic.addMouseListener(clickListener);
@@ -97,124 +243,39 @@ public class MainScreen extends MouseAdapter{
             carrierPic.addMouseListener(clickListener);
             carrierPic.addMouseMotionListener(dragListener);
 
-            //Add JLabels to ship panel in certain positions
-            pShipPanelConstraints.insets = new Insets(10, 5, 5, 5);
-            pShipPanelConstraints.anchor = GridBagConstraints.CENTER;
-            pShipPanelConstraints.weightx = .1;
-            shipPanel.add(destroyerPic, pShipPanelConstraints);
-
-            pShipPanelConstraints.insets = new Insets(0, 5, 5, 5);
-            pShipPanelConstraints.anchor = GridBagConstraints.CENTER;
-            pShipPanelConstraints.weightx = .2;
-            shipPanel.add(subPic, pShipPanelConstraints);
-
-            pShipPanelConstraints.insets = new Insets(0, 5, 5, 5);
-            pShipPanelConstraints.anchor = GridBagConstraints.CENTER;
-            pShipPanelConstraints.weightx = .2;
-            shipPanel.add(cruiserPic, pShipPanelConstraints);
-
-            pShipPanelConstraints.insets = new Insets(0, 5, 5, 5);
-            pShipPanelConstraints.anchor = GridBagConstraints.CENTER;
-            pShipPanelConstraints.weightx = .3;
-            shipPanel.add(battleshipPic, pShipPanelConstraints);
-
-            pShipPanelConstraints.insets = new Insets(0, 5, 5, 10);
-            pShipPanelConstraints.anchor = GridBagConstraints.CENTER;
-            pShipPanelConstraints.weightx = .4;
-            shipPanel.add(carrierPic, pShipPanelConstraints);
+            //Adds pShipPanel to playerScreen right side
+            playerScreen.setRightComponent(pShipPanel);
 
 
-            //Adds pGrid and shipPanel to playerScreen
-            playerScreen.add(pGrid, SwingConstants.LEFT);
-            playerScreen.add(shipPanel, SwingConstants.RIGHT);
-
-
-
-            //Create enemyScreen
-
-            //Mouse click listeners on enemyDisplay to effect both enemy grid panel and fire button
-            JPanel enemyDisplay = new JPanel(new GridBagLayout());
-            enemyDisplay.setBackground(Color.GRAY);
-
-            //Creating/Displaying enemyGrid
-            for(int row = 0; row < GRIDSIZE; row++) {
-                for(int column = 0; column < GRIDSIZE; column++) {
-                    JButton buttonTile = new JButton();
-                    eBoard[row][column] = buttonTile;
-                    buttonTile.addMouseListener(this);
-
-                    gridPanel.add(buttonTile);
-                }
-            }
-
-            /*Create enemyDisplay in enemyScreen (enemy ship list and fire button)
-            */
-
-            //Set ship imageIcons to JLabels that are then added to shipPanel//
-            JLabel eDestroyerPic;
-            JLabel eSubPic;
-            JLabel eCruiserPic;
-            JLabel eBattleshipPic;
-            JLabel eCarrierPic;
- 
-            //Set imageIcons to specified JLabels
-            eDestroyerPic.setIcon(DestroyerImage.getShipImage());
-            eSubPic.setIcon(SubmarineImage.getShipImage());
-            eCruiserPic.setIcon(CruiserImage.getShipImage());
-            eBattleshipPic.setIcon(BattleshipImage.getShipImage());
-            eCarrierPic.setIcon(CarrierImage.getShipImage());
-
-            //Add JLabels to ship panel in certain positions
-            GridBagConstraints eDisplayConstraints = new GridBagConstraints();
-            eDisplayConstraints.insets = new Insets(10, 5, 5, 5);
-            eDisplayConstraints.anchor = GridBagConstraints.PAGE_START;
-            eDisplayConstraints.weightx = .4;
-            enemyDisplay.add(eCarrierPic, eDisplayConstraints);
-
-            eDisplayConstraints.insets = new Insets(0, 5, 5, 5);
-            eDisplayConstraints.weightx = .3;
-            enemyDisplay.add(eBattleshipPic, eDisplayConstraints);
-
-            eDisplayConstraints.insets = new Insets(0, 5, 5, 5);
-            eDisplayConstraints.weightx = .2;
-            enemyDisplay.add(eCruiserPic, eDisplayConstraints);
-
-            eDisplayConstraints.insets = new Insets(0, 5, 5, 5);
-            eDisplayConstraints.weightx = .2;
-            enemyDisplay.add(eSubPic, eDisplayConstraints);
-
-            eDisplayConstraints.insets = new Insets(0, 5, 5, 5);
-            eDisplayConstraints.weightx = .1;
-            enemyDisplay.add(eDestroyerPic, eDisplayConstraints);
-
-
-            JButton fireButton = new JButton();
-            fireButton.setBackground(Color.RED);
-            fireButton.setForeground(Color.WHITE);
-            fireButton.setText("Fire!");
-            fireButton.setBorder(BorderFactory.createRaisedSoftBevelBorder());
-            eDisplayConstraints.anchor = GridBagConstraints.PAGE_END;
-
-            ClickListener eClickListener = new ClickListener();
-            fireButton.addMouseListener(eClickListener);
-
-            //Add fire button to enemyDisplay
-            enemyDisplay.add(fireButton, eDisplayConstraints);
-
-            //Adds gridPanel and enemyDisplay to enemyScreen
-            enemyScreen.add(gridPanel, SwingConstants.LEFT);
-            enemyScreen.add(enemyDisplay, SwingConstants.RIGHT);
-
-        }   //End of MainScreen constructor
+            //Set mainScreen layout?
+        }   //End of mainScreenComponents
     
+
+    //Function that creates border for shipPanel
+    Border createShipPanelBorder() {
+        Border raisedbevel = BorderFactory.createRaisedBevelBorder();
+        Border loweredBevel = BorderFactory.createLoweredBevelBorder();
+        Border compound = BorderFactory.createCompoundBorder(raisedbevel, loweredBevel);
+        return compound;
+    }
+
+    protected void enemyButtonTileClicked(MouseEvent evt) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'enemyButtonTileClicked'");
+    }
+
+    protected void fireButtonMouseClick(MouseEvent e) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'fireButtonMouseClick'");
+    }
         
     //eavesdropper thing in action listener?
-    private class ClickListener extends MouseAdapter{
+    protected class ClickListener extends MouseAdapter{
 	    public void mousePressed(MouseEvent event) {
 			prevPoint = event.getPoint();
 		}	
 	}
-    private class DragListener extends MouseMotionAdapter{
+    protected class DragListener extends MouseMotionAdapter{
     	public void mouseDragged(MouseEvent event) {
     		Point currPoint = event.getPoint();
     		int dx = (int) (currPoint.getX() - prevPoint.getX());
@@ -227,36 +288,27 @@ public class MainScreen extends MouseAdapter{
 	}
 
 
-        //Function that creates border for shipPanel
-        Border createShipPanelBorder() {
-            Border raisedbevel = BorderFactory.createRaisedBevelBorder();
-            Border loweredBevel = BorderFactory.createLoweredBevelBorder();
-            Border compound = BorderFactory.createCompoundBorder(raisedbevel, loweredBevel);
-            return compound;
+
+    //Function to update enemyShipDisplay
+    public void updateEnemyShipDisplay(PlayerInfo player) {
+        for(int i = 0; i < 5; i++) {
+            /*run through enemy ships
+            if ship is sunk, switch ship img to sunk(dark) view
+            */
+
         }
 
-        public void mouseClicked(MouseEvent e) {
-            //What happens when mouse is clicked
-        }
+        return;
+    } 
 
-
-        //Function to update enemyShipDisplay
-        public void updateEnemyShipDisplay(PlayerInfo player) {
-            for(int i = 0; i < 5; i++) {
-                /*run through enemy ships
-                if ship is sunk, switch ship img to sunk(dark) view
-                */
-
-            }
-
-            return;
-        } 
-
-        public static void main(String[] args) {
-            // Create players and grids
-            SelfGrid player1Grid = new SelfGrid();
-            EnemyGrid player2Grid = new EnemyGrid();
+    public static void main(String[] args) {
             
-            MainScreen game = new MainScreen(player1Grid, player2Grid);
-        }
+    /* Create and display mainScreen */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new MainScreen().setVisible(true);
+            }
+        });
+            
+    }
 }
