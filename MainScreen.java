@@ -31,7 +31,7 @@ public class MainScreen extends MouseAdapter{
         private final int GRIDSIZE = 10;
         JButton[][] eBoard = new JButton[GRIDSIZE][GRIDSIZE];
     
-        MainScreen(SelfGrid playerGrid, EnemyGrid enemyGrid) {
+        MainScreen() {
             mainScreen.setLayout(new BoxLayout(mainScreen, BoxLayout.PAGE_AXIS));
             mainScreen.setBackground(Color.DARK_GRAY);
             //Set up vertical spacing for game screen
@@ -50,8 +50,7 @@ public class MainScreen extends MouseAdapter{
             JButton[][] pBoard = new JButton[GRIDSIZE][GRIDSIZE];
             for(int row = 0; row < GRIDSIZE; row++) {
                 for (int column = 0; column < GRIDSIZE; column++) {
-                    Tile tempTile = playerGrid.getTile(row, column);
-                    JButton buttonTile = tempTile.getTileButton();
+                    JButton buttonTile = new JButton();
                     pBoard[row][column] = buttonTile;
                     buttonTile.setBackground(Color.BLUE);
 
@@ -140,8 +139,7 @@ public class MainScreen extends MouseAdapter{
             //Creating/Displaying enemyGrid
             for(int row = 0; row < GRIDSIZE; row++) {
                 for(int column = 0; column < GRIDSIZE; column++) {
-                    Tile tempTile = enemyGrid.getTile(row, column);
-                    JButton buttonTile = tempTile.getTileButton();
+                    JButton buttonTile = new JButton();
                     eBoard[row][column] = buttonTile;
                     buttonTile.addMouseListener(this);
 

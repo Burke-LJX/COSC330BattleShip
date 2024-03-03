@@ -51,9 +51,3 @@ public class GameWindow {
 
 
 }
-
-
-    /*Create actionListener functions
-     * one for clicking grid
-     * one for draggin ships
-    */
