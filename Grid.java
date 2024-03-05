@@ -23,9 +23,10 @@ public class Grid {
     }
 
     public void printGrid() {
-        System.out.println("  0 1 2 3 4 5 6 7 8 9");
+        System.out.println("  1 2 3 4 5 6 7 8 9 10");
         for (int i = 0; i < 10; i++) {
-            System.out.print(i + " ");
+            char yAxisLabel = (char) ('A' + i); 
+            System.out.print(yAxisLabel + " ");
             for (int j = 0; j < 10; j++) {
                 char status = gameBoard[i][j].isShot() ? (gameBoard[i][j].isOccupied() ? 'X' : 'O') : ' ';
                 System.out.print(status + " ");
@@ -34,6 +35,7 @@ public class Grid {
         }
         System.out.println();
     }
+    
 
     public boolean isLegalPlacement(int row, int col) {
         
@@ -42,7 +44,7 @@ public class Grid {
 }
 
 class PlayerGrid extends Grid {
-        private Ship[] ships;
+        public Ship[] ships;
     
         public PlayerGrid() {
             super();
@@ -63,7 +65,7 @@ class PlayerGrid extends Grid {
                     return true;
                 }
             }
-            return true;
+            return false;
         }
     
         private void placeShipRandomly(Ship ship) {
@@ -151,7 +153,7 @@ class PlayerGrid extends Grid {
                 return true;
             } else {
                 System.out.println("Miss!");
-                return false;
+                return true;
             }
         }
     }

@@ -43,6 +43,15 @@ class MyPanel extends JPanel{
     		prevPoint = currPoint;
     		repaint();  		
     	}
+		public void mouseReleased(MouseEvent event) {
+			/*
+			 * Get component at coordinates that mouse is released
+			 * if pGrid call function that checks/adds ship
+			 */
+			Point releasePoint = event.getPoint();
+			Component tempComponent = getComponentAt(releasePoint);
+			
+		}
 	}
 }
 

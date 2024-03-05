@@ -3,6 +3,7 @@ import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.JComponent;
 
 
 //import Drag.java;
@@ -22,6 +23,8 @@ public class MainScreen {
         //Declare and initialize a panel for player elements
         JSplitPane enemyScreen = new JSplitPane();
         private final int GRIDSIZE = 10;
+    	Point imageUpperLeft, prevPoint;
+        
     
         MainScreen() {
             mainScreen.setLayout(new BoxLayout(mainScreen, BoxLayout.PAGE_AXIS));
@@ -172,6 +175,7 @@ public class MainScreen {
                 for (int column = 0; column < GRIDSIZE; column++) {
                     JButton buttonTile = new JButton();
                     buttonTile.setBackground(Color.BLUE);
+                    //buttonTile.addDropTarget(new DropTargetListener dropTarget);
                     pBoard[row][column] = buttonTile;
 
                     pGridPanel.add(pBoard[row][column]);
@@ -238,7 +242,8 @@ public class MainScreen {
             battleshipPic.addMouseMotionListener(dragListener);
             carrierPic.addMouseListener(clickListener);
             carrierPic.addMouseMotionListener(dragListener);
-
+   
+            
             //Adds pShipPanel to playerScreen right side
             playerScreen.setRightComponent(pShipPanel);
 
@@ -404,6 +409,8 @@ public class MainScreen {
 
     protected void enemyButtonTileClicked(MouseEvent evt) {
         // TODO Auto-generated method stub
+        //click grid, check if hit/miss, update imgIcon, disable that specific button
+        
         throw new UnsupportedOperationException("Unimplemented method 'enemyButtonTileClicked'");
     }
 
@@ -412,7 +419,7 @@ public class MainScreen {
         throw new UnsupportedOperationException("Unimplemented method 'fireButtonMouseClick'");
     }
         
-    //eavesdropper thing in action listener?
+    
     protected class ClickListener extends MouseAdapter{
 	    public void mousePressed(MouseEvent event) {
 			prevPoint = event.getPoint();
@@ -431,7 +438,6 @@ public class MainScreen {
 	}
 
 
-
     //Function to update enemyShipDisplay
     public void updateEnemyShipDisplay(PlayerInfo player) {
         for(int i = 0; i < 5; i++) {
@@ -444,14 +450,5 @@ public class MainScreen {
         return;
     } 
 
-    public static void main(String[] args) {
-            
-    /* Create and display mainScreen */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainScreen().setVisible(true);
-            }
-        });
-            
-    }
+
 }
