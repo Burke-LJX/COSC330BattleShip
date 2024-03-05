@@ -248,7 +248,7 @@ public class MainScreen {
             playerScreen.setRightComponent(pShipPanel);
 
 
-            //Set mainScreen layout?
+            
         }   //End of mainScreenComponents
     
 
@@ -261,6 +261,7 @@ public class MainScreen {
     }
 
     protected ImageIcon createPlayerShipIcon(Ship.ShipType ship, boolean isSunk) {
+        //imgs 100x50 px?
         //Initialization of path variables
         //Player Ships:
         String destroyerImgPath = "images\\pDestroyerImg.png";
