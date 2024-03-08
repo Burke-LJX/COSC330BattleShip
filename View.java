@@ -29,7 +29,8 @@ public class View extends Grid{
     public void createAndShowMainScreen() {
         JPanel mainScreen = new JPanel();
         JPanel playerGridPanel;
-        JPanel playerShipPanel = new JPanel();
+        JPanel playerShipPanel;
+        JPanel enemyDisplayPanel;
         Grid gameboard = new Grid();
 
         mainScreen.setLayout(new BoxLayout(mainScreen, BoxLayout.PAGE_AXIS));
@@ -43,6 +44,9 @@ public class View extends Grid{
         Box enemyBox = new Box(BoxLayout.LINE_AXIS);
         enemyBox.setMinimumSize(new Dimension(Short.MAX_VALUE, 200));
         enemyBox.setMaximumSize(new Dimension(Short.MAX_VALUE, 300));
+        enemyDisplayPanel = initializeEnemyDisplay();
+
+        enemyBox.add(enemyDisplayPanel);
         mainScreen.add(enemyBox);
         Box playerBox = new Box(BoxLayout.LINE_AXIS);
 
@@ -65,7 +69,6 @@ public class View extends Grid{
     private JPanel initializePlayerGridPanel(Grid gameboard) {
         //Function to initialize playerGridPanel
         JPanel playerPanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
-        playerPanel.setSize(500, 500);
         JButton[][] playerGrid = new JButton[GRIDSIZE][GRIDSIZE];
 
         //Creating Buttons for playerGrid and gameboard
@@ -95,6 +98,8 @@ public class View extends Grid{
     private JPanel initializePlayerShipPanel() {
         JPanel shipPanel = new JPanel(new GridBagLayout());
         shipPanel.setMinimumSize(new Dimension(200, 400));
+        shipPanel.setMaximumSize(new Dimension(300, 400));
+        shipPanel.setBackground(Color.GRAY);
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
 
         return shipPanel;
