@@ -3,7 +3,6 @@ import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.JComponent;
 
 
 //import Drag.java;
@@ -16,27 +15,45 @@ import javax.swing.JComponent;
             click grid, check if hit/miss, update imgIcon, disable that specific button
         */
 public class MainScreen {
-        //Delcare and initialize panel to hold mainScreen
+        //Set game frame attributes
+        JFrame gameWindow = new JFrame("Battleship");
+
+        //Declare and initialize panel to hold mainScreen
         JPanel mainScreen = new JPanel();
         //Declare and initialize a panel for player elements
-        JSplitPane playerScreen = new JSplitPane();
+        JPanel playerScreen = new JPanel();
         //Declare and initialize a panel for player elements
-        JSplitPane enemyScreen = new JSplitPane();
+        JPanel enemyScreen = new JPanel();
         private final int GRIDSIZE = 10;
     	Point imageUpperLeft, prevPoint;
         
     
         MainScreen() {
+            gameWindow.setVisible(true);
+            gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            gameWindow.setLocationRelativeTo(null);
+            gameWindow.setSize(800, 800);
+
             mainScreen.setLayout(new BoxLayout(mainScreen, BoxLayout.PAGE_AXIS));
             mainScreen.setBackground(Color.DARK_GRAY);
+
             //Set up vertical spacing for game screen
             mainScreen.add(Box.createRigidArea(new Dimension(0,5)));
+            enemyScreen.setBackground(Color.RED);
+            enemyScreen.setLayout(new BoxLayout(enemyScreen, BoxLayout.LINE_AXIS));
+            enemyScreen.setSize(300, 300);
             mainScreen.add(enemyScreen);
+
             mainScreen.add(Box.createRigidArea(new Dimension(0, 10)));
+            playerScreen.setBackground(Color.ORANGE);
+            playerScreen.setLayout(new BoxLayout(playerScreen, BoxLayout.LINE_AXIS));
+            playerScreen.setSize(300, 300);
             mainScreen.add(playerScreen);
             mainScreen.add(Box.createRigidArea(new Dimension(0,5)));
 
-            mainScreenComponents();
+            //mainScreenComponents();
+            gameWindow.setContentPane(mainScreen);
+            gameWindow.add(mainScreen);
         }   //End of MainScreen constructor
 
         public void mainScreenComponents() {
@@ -68,8 +85,6 @@ public class MainScreen {
 
            //Create enemyScreen
 
-           enemyScreen.setDividerLocation(400);
-
             //Creating/Displaying enemyGrid
             for(int row = 0; row < GRIDSIZE; row++) {
                 for(int column = 0; column < GRIDSIZE; column++) {
@@ -86,8 +101,6 @@ public class MainScreen {
                 }
             }
 
-            //Add eGridPanel to enemyScreen left side
-            enemyScreen.setLeftComponent(eGridPanel);
 
 
             //Creating/Displaying eShipPanel
@@ -98,7 +111,7 @@ public class MainScreen {
 
             //Customize JPanels as ship icons and add to eShipPanel
             //Carrier:
-            eCarrierPic.setIcon(createEnemyShipIcon(Ship.ShipType.CARRIER, false));
+            //eCarrierPic.setIcon(createEnemyShipIcon(Ship.ShipType.CARRIER, false));
             eCarrierPic.setFocusable(false);
             GridBagConstraints gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
@@ -106,7 +119,7 @@ public class MainScreen {
             eShipPanel.add(eCarrierPic, gridBagConstraints);
 
             //Battleship: 
-            eBattleshipPic.setIcon(createEnemyShipIcon(Ship.ShipType.BATTLESHIP, false));
+            //eBattleshipPic.setIcon(createEnemyShipIcon(Ship.ShipType.BATTLESHIP, false));
             eBattleshipPic.setFocusable(false);
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
@@ -114,7 +127,7 @@ public class MainScreen {
             eShipPanel.add(eBattleshipPic, gridBagConstraints);
 
             //Cruiser:
-            eCruiserPic.setIcon(createEnemyShipIcon(Ship.ShipType.CRUISER, false));
+            //eCruiserPic.setIcon(createEnemyShipIcon(Ship.ShipType.CRUISER, false));
             eCruiserPic.setFocusable(false);
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
@@ -122,7 +135,7 @@ public class MainScreen {
             eShipPanel.add(eCruiserPic, gridBagConstraints);
 
             //Submarine:
-            eSubPic.setIcon(createEnemyShipIcon(Ship.ShipType.SUBMARINE, false));
+            //eSubPic.setIcon(createEnemyShipIcon(Ship.ShipType.SUBMARINE, false));
             eSubPic.setFocusable(false);
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
@@ -130,7 +143,7 @@ public class MainScreen {
             eShipPanel.add(eSubPic, gridBagConstraints);
 
             //Destroyer:
-            eDestroyerPic.setIcon(createEnemyShipIcon(Ship.ShipType.DESTROYER, false));
+            //eDestroyerPic.setIcon(createEnemyShipIcon(Ship.ShipType.DESTROYER, false));
             eDestroyerPic.setFocusable(false);
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
@@ -157,18 +170,17 @@ public class MainScreen {
             eShipPanel.add(fireButton, gridBagConstraints);
 
             //Add eShipPanel to enemyScreen right side
-            enemyScreen.setRightComponent(eShipPanel);
+            enemyScreen.add(eShipPanel);
 
 
             //Creating playerScreen
 
             //Drag and Drop Listener Assignment to playerScreen
-            ClickListener clickListener = new ClickListener();
+           /*  ClickListener clickListener = new ClickListener();
             playerScreen.addMouseListener(clickListener);
             DragListener dragListener = new DragListener();
             playerScreen.addMouseMotionListener(dragListener);
-            
-            playerScreen.setDividerLocation(400);
+ */            
 
             //Creating/Displaying SelfGrid
             for(int row = 0; row < GRIDSIZE; row++) {
@@ -184,7 +196,7 @@ public class MainScreen {
             //REMEMBER: to set pGrid to inactive after ship placement
 
             //Add pGridPanel to playerScreen left side
-            playerScreen.setLeftComponent(pGridPanel);
+            playerScreen.add(pGridPanel);
 
 
             //Create shipPanel in playerScreen
@@ -192,7 +204,7 @@ public class MainScreen {
             pShipPanel.setBackground(Color.GRAY);
 
             //Destroyer:
-            destroyerPic.setIcon(createPlayerShipIcon(Ship.ShipType.DESTROYER, false));
+            //destroyerPic.setIcon(createPlayerShipIcon(Ship.ShipType.DESTROYER, false));
             destroyerPic.setFocusable(false);
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
@@ -200,7 +212,8 @@ public class MainScreen {
             pShipPanel.add(destroyerPic, gridBagConstraints);
 
             //Submarine:
-            subPic.setIcon(createPlayerShipIcon(Ship.ShipType.SUBMARINE, false));
+            //subPic.setIcon(createPlayerShipIcon(Ship.ShipType.SUBMARINE, false));
+            subPic.setText("Submarine");
             subPic.setFocusable(false);
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
@@ -208,7 +221,8 @@ public class MainScreen {
             pShipPanel.add(subPic, gridBagConstraints);
 
             //Cruiser:
-            cruiserPic.setIcon(createPlayerShipIcon(Ship.ShipType.CRUISER, false));
+            cruiserPic.setText("Cruiser");
+            //cruiserPic.setIcon(createPlayerShipIcon(Ship.ShipType.CRUISER, false));
             cruiserPic.setFocusable(false);
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
@@ -216,7 +230,8 @@ public class MainScreen {
             pShipPanel.add(cruiserPic, gridBagConstraints);
 
             //Battleship:
-            battleshipPic.setIcon(createPlayerShipIcon(Ship.ShipType.BATTLESHIP, false));
+            battleshipPic.setText("Battleship");
+            //battleshipPic.setIcon(createPlayerShipIcon(Ship.ShipType.BATTLESHIP, false));
             battleshipPic.setFocusable(false);
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
@@ -224,7 +239,7 @@ public class MainScreen {
             pShipPanel.add(battleshipPic, gridBagConstraints);
 
             //Carrier:
-            carrierPic.setIcon(createPlayerShipIcon(Ship.ShipType.CARRIER, false));
+            //carrierPic.setIcon(createPlayerShipIcon(Ship.ShipType.CARRIER, false));
             carrierPic.setFocusable(false);
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
@@ -232,7 +247,7 @@ public class MainScreen {
             pShipPanel.add(carrierPic, gridBagConstraints);
 
             //Add drag listeners to said JLabels
-            destroyerPic.addMouseListener(clickListener);
+/*             destroyerPic.addMouseListener(clickListener);
             destroyerPic.addMouseMotionListener(dragListener);
             subPic.addMouseListener(clickListener);
             subPic.addMouseMotionListener(dragListener);
@@ -241,12 +256,11 @@ public class MainScreen {
             battleshipPic.addMouseListener(clickListener);
             battleshipPic.addMouseMotionListener(dragListener);
             carrierPic.addMouseListener(clickListener);
-            carrierPic.addMouseMotionListener(dragListener);
+            carrierPic.addMouseMotionListener(dragListener); */
    
             
             //Adds pShipPanel to playerScreen right side
-            playerScreen.setRightComponent(pShipPanel);
-
+            playerScreen.add(pShipPanel);
 
             
         }   //End of mainScreenComponents
@@ -260,142 +274,142 @@ public class MainScreen {
         return compound;
     }
 
-    protected ImageIcon createPlayerShipIcon(Ship.ShipType ship, boolean isSunk) {
-        //imgs 100x50 px?
-        //Initialization of path variables
-        //Player Ships:
-        String destroyerImgPath = "images\\pDestroyerImg.png";
-        String destroyerSunkImgPath = "images\\pDestroyerImgSunk.png";
-        String subImgPath = "images\\pSubImg.png";
-        String subSunkImgPath = "images\\pSubImgSunk.png";
-        String cruiserImgPath = "images\\pCruiserImg.png";
-        String cruiserSunkImgPath = "images\\pCruiserImgSunk.png";
-        String battleshipImgPath = "images\\pBattleshipImg.png";
-        String battleshipSunkImgPath = "images\\pBattleshipImgSunk.png";
-        String carrierImgPath = "images\\pCarrierImg.png";
-        String carrierSunkImgPath = "images\\pCarrierImgSunk.png";
+    // protected ImageIcon createPlayerShipIcon(Ship.ShipType ship, boolean isSunk) {
+    //     //imgs 100x50 px?
+    //     //Initialization of path variables
+    //     //Player Ships:
+    //     String destroyerImgPath = "images\\pDestroyerImg.png";
+    //     String destroyerSunkImgPath = "images\\pDestroyerImgSunk.png";
+    //     String subImgPath = "images\\pSubImg.png";
+    //     String subSunkImgPath = "images\\pSubImgSunk.png";
+    //     String cruiserImgPath = "images\\pCruiserImg.png";
+    //     String cruiserSunkImgPath = "images\\pCruiserImgSunk.png";
+    //     String battleshipImgPath = "images\\pBattleshipImg.png";
+    //     String battleshipSunkImgPath = "images\\pBattleshipImgSunk.png";
+    //     String carrierImgPath = "images\\pCarrierImg.png";
+    //     String carrierSunkImgPath = "images\\pCarrierImgSunk.png";
 
 
-        //Create ImageIcons
-        ImageIcon destroyerImg = createImageIcon(destroyerImgPath, "Player's Destroyer");
-        ImageIcon destroyerSunkImg = createImageIcon(destroyerSunkImgPath, "Player's Sunk Destroyer");
-        ImageIcon subImg = createImageIcon(subImgPath, "Player's Submarine");
-        ImageIcon subSunkImg = createImageIcon(subSunkImgPath, "Player's Sunk Submarine");
-        ImageIcon cruiserImg = createImageIcon(cruiserImgPath, "Player's Cruiser");
-        ImageIcon cruiserSunkImg = createImageIcon(cruiserSunkImgPath, "Player's Sunk Cruiser");
-        ImageIcon battleshipImg = createImageIcon(battleshipImgPath, "Player's Battleship");
-        ImageIcon battleshipSunkImg = createImageIcon(battleshipSunkImgPath, "Player's Sunk Battleship");
-        ImageIcon carrierImg = createImageIcon(carrierImgPath, "Player's Carrier");
-        ImageIcon carrierSunkImg = createImageIcon(carrierSunkImgPath, "Player's Sunk Carrier");
+    //     //Create ImageIcons
+    //     ImageIcon destroyerImg = createImageIcon(destroyerImgPath, "Player's Destroyer");
+    //     ImageIcon destroyerSunkImg = createImageIcon(destroyerSunkImgPath, "Player's Sunk Destroyer");
+    //     ImageIcon subImg = createImageIcon(subImgPath, "Player's Submarine");
+    //     ImageIcon subSunkImg = createImageIcon(subSunkImgPath, "Player's Sunk Submarine");
+    //     ImageIcon cruiserImg = createImageIcon(cruiserImgPath, "Player's Cruiser");
+    //     ImageIcon cruiserSunkImg = createImageIcon(cruiserSunkImgPath, "Player's Sunk Cruiser");
+    //     ImageIcon battleshipImg = createImageIcon(battleshipImgPath, "Player's Battleship");
+    //     ImageIcon battleshipSunkImg = createImageIcon(battleshipSunkImgPath, "Player's Sunk Battleship");
+    //     ImageIcon carrierImg = createImageIcon(carrierImgPath, "Player's Carrier");
+    //     ImageIcon carrierSunkImg = createImageIcon(carrierSunkImgPath, "Player's Sunk Carrier");
 
-        switch(ship) {
-            case DESTROYER:
-                if (isSunk == false) {
-                    return destroyerImg;
-                }
-                else {
-                    return destroyerSunkImg;
-                }
-            case SUBMARINE:
-                if (isSunk == false) {
-                    return subImg;
-                }
-                else {
-                    return subSunkImg;
-                }
-            case CRUISER:
-                if (isSunk == false) {
-                    return cruiserImg;
-                }
-                else {
-                    return cruiserSunkImg;
-                }
-            case BATTLESHIP:
-                if (isSunk == false) {
-                    return battleshipImg;
-                }
-                else {
-                    return battleshipSunkImg;
-                }
-            case CARRIER:
-                if (isSunk == false) {
-                    return carrierImg;
-                }
-                else {
-                    return carrierSunkImg;
-                }
-            default:
-            System.out.println("Failure to create ImageIcon");
-        }
-    }
+    //     switch(ship) {
+    //         case DESTROYER:
+    //             if (isSunk == false) {
+    //                 return destroyerImg;
+    //             }
+    //             else {
+    //                 return destroyerSunkImg;
+    //             }
+    //         case SUBMARINE:
+    //             if (isSunk == false) {
+    //                 return subImg;
+    //             }
+    //             else {
+    //                 return subSunkImg;
+    //             }
+    //         case CRUISER:
+    //             if (isSunk == false) {
+    //                 return cruiserImg;
+    //             }
+    //             else {
+    //                 return cruiserSunkImg;
+    //             }
+    //         case BATTLESHIP:
+    //             if (isSunk == false) {
+    //                 return battleshipImg;
+    //             }
+    //             else {
+    //                 return battleshipSunkImg;
+    //             }
+    //         case CARRIER:
+    //             if (isSunk == false) {
+    //                 return carrierImg;
+    //             }
+    //             else {
+    //                 return carrierSunkImg;
+    //             }
+    //         default:
+    //         System.out.println("Failure to create ImageIcon");
+    //     }
+    // }
 
-    protected ImageIcon createEnemyShipIcon(Ship.ShipType ship, boolean isSunk) {
-        //Initialization of path variables
-        //Enemy Ships:
-        String eDestroyerImgPath = "images\\eDestroyerImg.png";
-        String eDestroyerSunkImgPath = "images\\eDestroyerImgSunk.png";
-        String eSubImgPath = "images\\eSubImg.png";
-        String eSubSunkImgPath = "images\\eSubImgSunk.png";
-        String eCruiserImgPath = "images\\eCruiserImg.png";
-        String eCruiserSunkImgPath = "images\\eCruiserImgSunk.png";
-        String eBattleshipImgPath = "images\\eBattleshipImg.png";
-        String eBattleshipSunkImgPath = "images\\eBattleshipImgSunk.png";
-        String eCarrierImgPath = "images\\eCarrierImg.png";
-        String eCarrierSunkImgPath = "images\\eCarrierImgSunk.png";
+    // protected ImageIcon createEnemyShipIcon(Ship.ShipType ship, boolean isSunk) {
+    //     //Initialization of path variables
+    //     //Enemy Ships:
+    //     String eDestroyerImgPath = "images\\eDestroyerImg.png";
+    //     String eDestroyerSunkImgPath = "images\\eDestroyerImgSunk.png";
+    //     String eSubImgPath = "images\\eSubImg.png";
+    //     String eSubSunkImgPath = "images\\eSubImgSunk.png";
+    //     String eCruiserImgPath = "images\\eCruiserImg.png";
+    //     String eCruiserSunkImgPath = "images\\eCruiserImgSunk.png";
+    //     String eBattleshipImgPath = "images\\eBattleshipImg.png";
+    //     String eBattleshipSunkImgPath = "images\\eBattleshipImgSunk.png";
+    //     String eCarrierImgPath = "images\\eCarrierImg.png";
+    //     String eCarrierSunkImgPath = "images\\eCarrierImgSunk.png";
 
 
-        //Create ImageIcons
-        ImageIcon eDestroyerImg = createImageIcon(eDestroyerImgPath, "Enemy's Destroyer");
-        ImageIcon eDestroyerSunkImg = createImageIcon(eDestroyerSunkImgPath, "Enemy's Sunk Destroyer");
-        ImageIcon eSubImg = createImageIcon(eSubImgPath, "Enemy's Submarine");
-        ImageIcon eSubSunkImg = createImageIcon(eSubSunkImgPath, "Enemy's Sunk Submarine");
-        ImageIcon eCruiserImg = createImageIcon(eCruiserImgPath, "Enemy's Cruiser");
-        ImageIcon eCruiserSunkImg = createImageIcon(eCruiserSunkImgPath, "Enemy's Sunk Cruiser");
-        ImageIcon eBattleshipImg = createImageIcon(eBattleshipImgPath, "Enemy's Battleship");
-        ImageIcon eBattleshipSunkImg = createImageIcon(eBattleshipSunkImgPath, "Enemy's Sunk Battleship");
-        ImageIcon eCarrierImg = createImageIcon(eCarrierImgPath, "Enemy's Carrier");
-        ImageIcon eCarrierSunkImg = createImageIcon(eCarrierSunkImgPath, "Enemy's Sunk Carrier");
+    //     //Create ImageIcons
+    //     ImageIcon eDestroyerImg = createImageIcon(eDestroyerImgPath, "Enemy's Destroyer");
+    //     ImageIcon eDestroyerSunkImg = createImageIcon(eDestroyerSunkImgPath, "Enemy's Sunk Destroyer");
+    //     ImageIcon eSubImg = createImageIcon(eSubImgPath, "Enemy's Submarine");
+    //     ImageIcon eSubSunkImg = createImageIcon(eSubSunkImgPath, "Enemy's Sunk Submarine");
+    //     ImageIcon eCruiserImg = createImageIcon(eCruiserImgPath, "Enemy's Cruiser");
+    //     ImageIcon eCruiserSunkImg = createImageIcon(eCruiserSunkImgPath, "Enemy's Sunk Cruiser");
+    //     ImageIcon eBattleshipImg = createImageIcon(eBattleshipImgPath, "Enemy's Battleship");
+    //     ImageIcon eBattleshipSunkImg = createImageIcon(eBattleshipSunkImgPath, "Enemy's Sunk Battleship");
+    //     ImageIcon eCarrierImg = createImageIcon(eCarrierImgPath, "Enemy's Carrier");
+    //     ImageIcon eCarrierSunkImg = createImageIcon(eCarrierSunkImgPath, "Enemy's Sunk Carrier");
 
-        switch(ship) {
-            case DESTROYER:
-                if (isSunk == false) {
-                    return eDestroyerImg;
-                }
-                else {
-                    return eDestroyerSunkImg;
-                }
-            case SUBMARINE:
-                if (isSunk == false) {
-                    return eSubImg;
-                }
-                else {
-                    return eSubSunkImg;
-                }
-            case CRUISER:
-                if (isSunk == false) {
-                    return eCruiserImg;
-                }
-                else {
-                    return eCruiserSunkImg;
-                }
-            case BATTLESHIP:
-                if (isSunk == false) {
-                    return eBattleshipImg;
-                }
-                else {
-                    return eBattleshipSunkImg;
-                }
-            case CARRIER:
-                if (isSunk == false) {
-                    return eCarrierImg;
-                }
-                else {
-                    return eCarrierSunkImg;
-                }
-            default:
-            System.out.println("Failure to create ImageIcon");
-        }
-    }
+    //     switch(ship) {
+    //         case DESTROYER:
+    //             if (isSunk == false) {
+    //                 return eDestroyerImg;
+    //             }
+    //             else {
+    //                 return eDestroyerSunkImg;
+    //             }
+    //         case SUBMARINE:
+    //             if (isSunk == false) {
+    //                 return eSubImg;
+    //             }
+    //             else {
+    //                 return eSubSunkImg;
+    //             }
+    //         case CRUISER:
+    //             if (isSunk == false) {
+    //                 return eCruiserImg;
+    //             }
+    //             else {
+    //                 return eCruiserSunkImg;
+    //             }
+    //         case BATTLESHIP:
+    //             if (isSunk == false) {
+    //                 return eBattleshipImg;
+    //             }
+    //             else {
+    //                 return eBattleshipSunkImg;
+    //             }
+    //         case CARRIER:
+    //             if (isSunk == false) {
+    //                 return eCarrierImg;
+    //             }
+    //             else {
+    //                 return eCarrierSunkImg;
+    //             }
+    //         default:
+    //         System.out.println("Failure to create ImageIcon");
+    //     }
+    // }
 
     public ImageIcon createImageIcon(String path, String description) {
         java.net.URL imgURL = getClass().getResource(path);
@@ -426,7 +440,7 @@ public class MainScreen {
 			prevPoint = event.getPoint();
 		}	
 	}
-    protected class DragListener extends MouseMotionAdapter{
+   /*  protected class DragListener extends MouseMotionAdapter{
     	public void mouseDragged(MouseEvent event) {
     		Point currPoint = event.getPoint();
     		int dx = (int) (currPoint.getX() - prevPoint.getX());
@@ -436,7 +450,7 @@ public class MainScreen {
     		prevPoint = currPoint;
     		repaint();  		
     	}
-	}
+	} */
 
 
     //Function to update enemyShipDisplay
@@ -451,5 +465,8 @@ public class MainScreen {
         return;
     } 
 
+    public static void main(String[] args) {
+        MainScreen mainView = new MainScreen();
+    }
 
 }

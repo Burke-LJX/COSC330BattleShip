@@ -62,6 +62,7 @@ public class GameWindow {
 
     protected void joinGameButtonClick(MouseEvent e) {
         // Call method to join game (client side)
+        String ipAddress;
         throw new UnsupportedOperationException("Unimplemented method 'joinGameButtonClick'");
     }
 
