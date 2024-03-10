@@ -31,12 +31,11 @@ public class View extends Grid{
         //Create mainScreen layout
 
         /*Create enemyDisplay
-        Bar horizontal across top that holds enemy ship displays, height up to 300px
+        Bar horizontal across top that holds enemy ship displays
         */
         Box enemyBox = new Box(BoxLayout.LINE_AXIS);
-        enemyBox.setMinimumSize(new Dimension(Short.MAX_VALUE, 200));
-        enemyBox.setMaximumSize(new Dimension(Short.MAX_VALUE, 300));
-        enemyDisplayPanel = initializeEnemyDisplay();
+        //enemyBox.setSize(new Dimension(mainScreen.getWidth(), 200));
+        enemyDisplayPanel = initializeEnemyDisplay(mainScreen.getWidth());
 
         enemyBox.add(enemyDisplayPanel);
         mainScreen.add(enemyBox);
@@ -45,51 +44,64 @@ public class View extends Grid{
         //Create and customize playerGridPanel
         playerGridPanel = initializePlayerGridPanel(gameboard);
         //Create and customize playerShipPanel
-        playerShipPanel = initializePlayerShipPanel();
+        playerShipPanel = initializePlayerShipPanel(mainScreen.getHeight());
 
         //Add player display to playerBox and then mainScreen
-        //Frame buffer 25-50 px, ButtonPanel up to 50*100 px
-        playerGridPanel.setMinimumSize(new Dimension(500,500));
+        //playerGridPanel.setSize(new Dimension(500,500));
 
         playerBox.add(playerGridPanel);
         playerBox.add(playerShipPanel);
         mainScreen.add(playerBox);
 
         //Creating button menu at bottom of frame: randomize ships, maybe host and join?
-        JPanel buttonPanel = initializeButtonPanel();
+        JPanel buttonPanel = initializeButtonPanel(mainScreen.getWidth());
         mainScreen.add(buttonPanel);
 
         
         gameWindow.add(mainScreen);
     }
 
+    //Function to initialize enemy display
+    private JPanel initializeEnemyDisplay(int windowWidth) {
+        JPanel enemyDisplayPanel = new JPanel();
+        enemyDisplayPanel.setLayout(new BoxLayout(enemyDisplayPanel, BoxLayout.PAGE_AXIS));
+        enemyDisplayPanel.setBackground(Color.DARK_GRAY);
 
-    private JPanel initializeEnemyDisplay() {
-        JPanel enemyDisplayPanel = new JPanel(new GridBagLayout());
-        String eCarrierPath = "\\images\\eCruiserImg.png";
-        String eBattleshipPath = "\\images\\eCruiserImg.png";
-        String eCruiserPath = "\\images\\eCruiserImg.png";
-        String eSubPath = "\\images\\eCruiserImg.png";
-        String eDestroyerPath = "\\images\\eCruiserImg.png";
+        Box panelTitleBox = new Box(BoxLayout.LINE_AXIS);
+        JLabel panelTitle = new JLabel();
+        //panelTitleBox.setSize(new Dimension(windowWidth, 30));
+        panelTitle.setForeground(Color.WHITE);
+        panelTitle.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
+        panelTitle.setText("Enemy Ships Left");
+        panelTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelTitleBox.add(panelTitle);
 
-        ImageIcon eCarrier = createImageIcon(eCarrierPath, "Enemy Carrier Image");
-        ImageIcon eBattlehsip = createImageIcon(eBattleshipPath, "Enemy Battleship Image");
-        ImageIcon eCruiser = createImageIcon(eCruiserPath, "Enemy Cruiser Image");
-        ImageIcon eSub = createImageIcon(eSubPath, "Enemy Submarine Image");
-        ImageIcon eDestroyer = createImageIcon(eDestroyerPath, "Enemy Destroyer Image");
+        enemyDisplayPanel.add(panelTitleBox);
 
-        JLabel eCarrierPic = new JLabel(eCarrier);
+        Box enemyShipImgBox = new Box(BoxLayout.LINE_AXIS);
 
-        //eCarrierPic.setIcon(createEnemyShipIcon(Ship.ShipType.CARRIER, false));
-        eCarrierPic.setFocusable(false);
-        GridBagConstraints gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        //eShipPanel.add(eCarrierPic, gridBagConstraints);
+        //Setting up enemy ship images
+        String[] shipPaths = {"/images/eCarrierImg.png", "/images/eBattleshipImg.png", "/images/eCruiserImg.png", "/images/eSubImg.png", "/images/eDestroyerImg.png"};
+        
+        enemyShipImgBox.add(Box.createHorizontalGlue());
+
+        for (String path : shipPaths) {
+            ImageIcon shipIcon = createImageIcon(path, "Enemy Ship Image");
+            JLabel shipLabel = new JLabel(shipIcon);
+            shipLabel.setFocusable(false);
+            shipLabel.setSize(new Dimension(100, 50));
+            shipLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            enemyShipImgBox.add(shipLabel);
+            enemyShipImgBox.add(Box.createHorizontalGlue());
+        }
+        enemyShipImgBox.add(Box.createHorizontalGlue());
+
+        enemyDisplayPanel.add(enemyShipImgBox);
 
         return enemyDisplayPanel;
     }
 
+    //Function to initialize player grid
     private JPanel initializePlayerGridPanel(Grid gameboard) {
         //Function to initialize playerGridPanel
         JPanel playerPanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
@@ -101,6 +113,7 @@ public class View extends Grid{
                 Tile temp = gameboard.getTile(row, column);
                 JButton buttonTile = new JButton();
                 buttonTile.setBackground(Color.BLUE);
+                buttonTile.setSize(new Dimension(10,10));
                 
 
                 playerGrid[row][column] = buttonTile;
@@ -119,58 +132,32 @@ public class View extends Grid{
         return playerPanel;
     }
 
-    private JPanel initializePlayerShipPanel() {
-        JPanel shipPanel = new JPanel(new GridBagLayout());
-        shipPanel.setMinimumSize(new Dimension(200, 400));
-        shipPanel.setMaximumSize(new Dimension(300, 400));
+    //Function to initialize player ship panel
+    private JPanel initializePlayerShipPanel(int windowHeight) {
+        JPanel shipPanel = new JPanel();
+        shipPanel.setLayout(new BoxLayout(shipPanel, BoxLayout.PAGE_AXIS));
+        //shipPanel.setPreferredSize(new Dimension(200, windowHeight));
         shipPanel.setBackground(Color.GRAY);
         Border shipPanelBorder = createShipPanelBorder();
         shipPanel.setBorder(shipPanelBorder);
 
-
-        GridBagConstraints gridBagConstraints = new GridBagConstraints();
-        //Destroyer:
-            //destroyerPic.setIcon(createPlayerShipIcon(Ship.ShipType.DESTROYER, false));
-/*             destroyerPic.setFocusable(false);
-            gridBagConstraints = new GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 1;
-            shipPanel.add(destroyerPic, gridBagConstraints);
-
-            //Submarine:
-            //subPic.setIcon(createPlayerShipIcon(Ship.ShipType.SUBMARINE, false));
-            subPic.setText("Submarine");
-            subPic.setFocusable(false);
-            gridBagConstraints = new GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 2;
-            shipPanel.add(subPic, gridBagConstraints);
-
-            //Cruiser:
-            cruiserPic.setText("Cruiser");
-            //cruiserPic.setIcon(createPlayerShipIcon(Ship.ShipType.CRUISER, false));
-            cruiserPic.setFocusable(false);
-            gridBagConstraints = new GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 3;
-            pShipPanel.add(cruiserPic, gridBagConstraints);
-
-            //Battleship:
-            battleshipPic.setText("Battleship");
-            //battleshipPic.setIcon(createPlayerShipIcon(Ship.ShipType.BATTLESHIP, false));
-            battleshipPic.setFocusable(false);
-            gridBagConstraints = new GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 4;
-            pShipPanel.add(battleshipPic, gridBagConstraints);
-
-            //Carrier:
-            //carrierPic.setIcon(createPlayerShipIcon(Ship.ShipType.CARRIER, false));
-            carrierPic.setFocusable(false);
-            gridBagConstraints = new GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 5;
-            pShipPanel.add(carrierPic, gridBagConstraints);  */       
+        //Setting up player ship images
+        String[] shipPaths = {"/images/pCarrierImg.png", "/images/pBattleshipImg.png", "/images/pCruiserImg.png", "/images/pSubImg.png", "/images/pDestroyerImg.png"};
+        //String[] shipNames = {"Carrier", "Battleship", "Cruiser", "Submarine", "Destroyer"};
+        
+        shipPanel.add(Box.createVerticalGlue());
+        shipPanel.add(Box.createHorizontalGlue());
+        for (String path : shipPaths) {
+            ImageIcon shipIcon = createImageIcon(path, "Player Ship Icon");
+            JLabel shipLabel = new JLabel(shipIcon);
+            shipLabel.setFocusable(false);
+            shipLabel.setSize(new Dimension(100, 50));
+            shipLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            shipLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+            shipPanel.add(shipLabel);
+            shipPanel.add(Box.createVerticalGlue());
+        }
+        shipPanel.add(Box.createVerticalGlue());
 
         return shipPanel;
     }
@@ -184,14 +171,14 @@ public class View extends Grid{
     }
 
     //Function that creates and initializes ButtonPanel
-    JPanel initializeButtonPanel() {
+    JPanel initializeButtonPanel(int windowWidth) {
         JPanel buttonPanel = new JPanel();
         JButton hostButton = new JButton("Host Game");
         JButton joinButton = new JButton("Join Game");
         JButton randomizeShipButton = new JButton("Randomize Ship Placement");
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
         buttonPanel.setBackground(Color.DARK_GRAY);
-        buttonPanel.setMinimumSize(new Dimension(Short.MAX_VALUE, 150));
+        buttonPanel.setMinimumSize(new Dimension(windowWidth, 150));
         buttonPanel.add(Box.createRigidArea(new Dimension(25, 0)));
 
         //Customize Buttons
@@ -221,7 +208,7 @@ public class View extends Grid{
         });
 
         buttonPanel.add(hostButton);
-        buttonPanel.add(Box.createHorizontalGlue());
+        buttonPanel.add(Box.createRigidArea(new Dimension(10,0)));
         buttonPanel.add(joinButton);
         buttonPanel.add(Box.createHorizontalGlue());
         buttonPanel.add(randomizeShipButton);
