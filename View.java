@@ -85,7 +85,9 @@ public class View extends Grid{
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        eShipPanel.add(eCarrierPic, gridBagConstraints);
+        //eShipPanel.add(eCarrierPic, gridBagConstraints);
+
+        return enemyDisplayPanel;
     }
 
     private JPanel initializePlayerGridPanel(Grid gameboard) {
@@ -129,7 +131,7 @@ public class View extends Grid{
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
         //Destroyer:
             //destroyerPic.setIcon(createPlayerShipIcon(Ship.ShipType.DESTROYER, false));
-            destroyerPic.setFocusable(false);
+/*             destroyerPic.setFocusable(false);
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
             gridBagConstraints.gridy = 1;
@@ -168,7 +170,7 @@ public class View extends Grid{
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
             gridBagConstraints.gridy = 5;
-            pShipPanel.add(carrierPic, gridBagConstraints);        
+            pShipPanel.add(carrierPic, gridBagConstraints);  */       
 
         return shipPanel;
     }

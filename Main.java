@@ -3,8 +3,6 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        GameWindow game = new GameWindow();
-        MainScreen mainScreen = new MainScreen();
         // Create players and grids
         PlayerGrid player1Grid = new PlayerGrid();
         PlayerGrid player2Grid = new PlayerGrid();
