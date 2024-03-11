@@ -12,14 +12,15 @@ public class BattleshipView extends Grid{
         //Set game frame attributes
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameWindow.setLocationRelativeTo(null);
-        gameWindow.setSize(1500, 1500);
+        gameWindow.setLocation(0, 0);
+        gameWindow.setSize(1500, 1000);
         createAndShowMainScreen();
 
         gameWindow.setVisible(true);
     }
 
     public void createAndShowMainScreen() {
-        JPanel mainScreen = new JPanel();  
+        JPanel mainScreen = new JPanel(new BorderLayout());
         JPanel playerGridPanel;
         JPanel playerShipPanel;
         JPanel enemyGridPanel;
@@ -27,97 +28,79 @@ public class BattleshipView extends Grid{
         Grid gameboard = new Grid();
         Grid eboard = new Grid();
     
-        mainScreen.setLayout(new BoxLayout(mainScreen, BoxLayout.PAGE_AXIS));
         mainScreen.setBackground(Color.DARK_GRAY);
         Box topBox = new Box(BoxLayout.LINE_AXIS);
-        Box mainBox = new Box(BoxLayout.LINE_AXIS);
+        Box centerBox = new Box(BoxLayout.LINE_AXIS);
         Box bottomBox = new Box(BoxLayout.PAGE_AXIS);
-
-        //use topBox to hold titles for player v enemy side?
-        mainScreen.add(topBox);
-
+    
+        mainScreen.add(topBox, BorderLayout.NORTH);
+    
+        // Create player panel
         Box playerBox = new Box(BoxLayout.PAGE_AXIS);
-        // Create and customize playerGridPanel
         playerGridPanel = initializePlayerGridPanel(gameboard);
-        // Create and customize playerShipPanel
         playerShipPanel = initializePlayerShipPanel();
         playerBox.add(playerGridPanel);
         playerBox.add(playerShipPanel);
-        mainBox.add(playerBox);
-
-        mainBox.add(Box.createHorizontalGlue());
-
-        //Create enemyDisplay
-        Box enemyBox = new Box(BoxLayout.PAGE_AXIS);
+    
+        // Create center panel with buttonPanel
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.PAGE_AXIS));  // Set the layout to PAGE_AXIS
+        JPanel buttonPanel = initializeButtonPanel(mainScreen.getHeight());  // Use mainScreen.getHeight()
+        centerPanel.add(Box.createVerticalGlue());
+        centerPanel.add(buttonPanel);
+        centerPanel.add(Box.createVerticalGlue());
+    
+        // Create right panel with enemyGridPanel and enemyShipPanel
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.PAGE_AXIS));
         enemyShipPanel = initializeEnemyDisplay();
         enemyGridPanel = initializeEnemyGridPanel(eboard);
-        enemyBox.add(enemyGridPanel);
-        enemyBox.add(enemyShipPanel);
-        mainBox.add(enemyBox);
-
-        mainScreen.add(mainBox);
- 
+        rightPanel.add(enemyGridPanel);
+        rightPanel.add(enemyShipPanel);
     
-        //Creating button menu at the bottom left of the frame: randomize ships, maybe host and join?
-        JPanel buttonPanel = initializeButtonPanel(mainScreen.getWidth());
+        // Add player, center, and right panels to centerBox
+        centerBox.add(playerBox);
+        centerBox.add(Box.createHorizontalGlue());
+        centerBox.add(centerPanel);
+        centerBox.add(rightPanel);
+    
+        mainScreen.add(centerBox, BorderLayout.CENTER);
+    
+        // Rest of the code remains unchanged
         bottomBox.add(Box.createVerticalGlue());
-        bottomBox.add(buttonPanel);
-        mainScreen.add(bottomBox);
-        
+        mainScreen.add(bottomBox, BorderLayout.SOUTH);
         gameWindow.add(mainScreen);
     }
     
-    
-    
-    
-    
-
-    
     // Function to initialize enemy display
-private JPanel initializeEnemyDisplay() {
-    JPanel enemyDisplayPanel = new JPanel();
-    enemyDisplayPanel.setLayout(new BoxLayout(enemyDisplayPanel, BoxLayout.PAGE_AXIS));
-    enemyDisplayPanel.setBackground(Color.DARK_GRAY);
-
-/*     Box panelTitleBox = new Box(BoxLayout.LINE_AXIS);
-    JLabel panelTitle = new JLabel();
-    panelTitle.setForeground(Color.WHITE);
-    panelTitle.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
-    panelTitle.setText("Enemy Ships Left");
-    panelTitle.setPreferredSize(new Dimension(20, 30));
-    panelTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-    panelTitleBox.add(panelTitle);
-
-    enemyDisplayPanel.add(panelTitleBox); */
-
-    Box enemyShipImgBox = new Box(BoxLayout.LINE_AXIS);
-
-    // Setting up enemy ship images
-    String[] shipPaths = {
-        "/images/eCarrierImg.png", "/images/eBattleshipImg.png",
-        "/images/eCruiserImg.png", "/images/eSubImg.png", "/images/eDestroyerImg.png"
-    };
-
-    enemyShipImgBox.add(Box.createHorizontalGlue());
-
-    for (String path : shipPaths) {
-        ImageIcon shipIcon = createImageIcon(path, "Enemy Ship Image");
-        JLabel shipLabel = new JLabel(shipIcon);
-
-        // Set preferred size for the enemy ship images
-        shipLabel.setPreferredSize(new Dimension(20, 20));
-
-        shipLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        enemyShipImgBox.add(shipLabel);
-        enemyShipImgBox.add(Box.createHorizontalGlue());
+    private JPanel initializeEnemyDisplay() {
+        JPanel enemyDisplayPanel = new JPanel();
+        enemyDisplayPanel.setLayout(new BoxLayout(enemyDisplayPanel, BoxLayout.PAGE_AXIS));
+        enemyDisplayPanel.setBackground(Color.DARK_GRAY);
+    
+        // Setting up enemy ship images
+        String[] shipPaths = {
+            "/images/eCarrierImg.png", "/images/eBattleshipImg.png",
+            "/images/eCruiserImg.png", "/images/eSubImg.png", "/images/eDestroyerImg.png"
+        };
+    
+        for (String path : shipPaths) {
+            ImageIcon originalIcon = createImageIcon(path, "Enemy Ship Image");
+    
+            // Scale the image while maintaining the aspect ratio
+            ImageIcon scaledIcon = scaleImageIcon(originalIcon, 500, 100);
+    
+            JLabel shipLabel = new JLabel(scaledIcon);
+    
+            shipLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            enemyDisplayPanel.add(shipLabel);
+            enemyDisplayPanel.add(Box.createVerticalStrut(5)); // Add spacing between ships
+        }
+    
+        return enemyDisplayPanel;
     }
-
-    enemyShipImgBox.add(Box.createHorizontalGlue());
-
-    enemyDisplayPanel.add(enemyShipImgBox);
-
-    return enemyDisplayPanel;
-}
+    
+    
 
 
 
@@ -153,7 +136,7 @@ private JPanel initializePlayerGridPanel(Grid gameboard) {
 }
 
 
-//Function to initialize player ship panel
+// Function to initialize player ship panel
 private JPanel initializePlayerShipPanel() {
     JPanel shipPanel = new JPanel();
     shipPanel.setLayout(new BoxLayout(shipPanel, BoxLayout.PAGE_AXIS));
@@ -168,17 +151,16 @@ private JPanel initializePlayerShipPanel() {
     };
 
     shipPanel.add(Box.createVerticalGlue());
-    shipPanel.add(Box.createHorizontalGlue());
 
     for (String path : shipPaths) {
-        ImageIcon shipIcon = createImageIcon(path, "Player Ship Icon");
-        JLabel shipLabel = new JLabel(shipIcon);
+        ImageIcon originalIcon = createImageIcon(path, "Player Ship Icon");
 
-        // Set preferred size for the ship images
-        shipLabel.setPreferredSize(new Dimension(40, 40));
+        // Scale the image while maintaining the aspect ratio
+        ImageIcon scaledIcon = scaleImageIcon(originalIcon, 500, 100);
+
+        JLabel shipLabel = new JLabel(scaledIcon);
 
         shipLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        shipLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
         shipPanel.add(shipLabel);
         shipPanel.add(Box.createVerticalGlue());
     }
@@ -187,6 +169,14 @@ private JPanel initializePlayerShipPanel() {
 
     return shipPanel;
 }
+
+// Function to scale ImageIcon while maintaining aspect ratio
+private ImageIcon scaleImageIcon(ImageIcon icon, int width, int height) {
+    java.awt.Image image = icon.getImage();
+    java.awt.Image scaledImage = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+    return new ImageIcon(scaledImage);
+}
+
 
 
     //Function that creates border for shipPanel
@@ -198,52 +188,64 @@ private JPanel initializePlayerShipPanel() {
     }
 
 
-    //Function that creates and initializes ButtonPanel
-    JPanel initializeButtonPanel(int windowWidth) {
-        JPanel buttonPanel = new JPanel();
-        JButton hostButton = new JButton("Host Game");
-        JButton joinButton = new JButton("Join Game");
-        JButton randomizeShipButton = new JButton("Randomize Ship Placement");
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
-        buttonPanel.setBackground(Color.DARK_GRAY);
-        buttonPanel.setMinimumSize(new Dimension(windowWidth, 150));
-        buttonPanel.add(Box.createRigidArea(new Dimension(25, 0)));
+// Function that creates and initializes ButtonPanel
+JPanel initializeButtonPanel(int windowWidth) {
+    JPanel buttonPanel = new JPanel();
+    JButton hostButton = new JButton("Host Game");
+    JButton joinButton = new JButton("Join Game");
+    JButton randomizeShipButton = new JButton("Randomize Ship Placement");
 
-        //Customize Buttons
-        hostButton.setBorder(BorderFactory.createRaisedSoftBevelBorder());
-        joinButton.setBorder(BorderFactory.createRaisedSoftBevelBorder());
-        hostButton.setFont(new Font("Arial", 1, 20));
-        joinButton.setFont(new Font("Arial", 1, 20));
-        randomizeShipButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
+    // Increase the font size for all buttons
+    Font buttonFont = new Font("Arial", Font.BOLD, 24);
+    hostButton.setFont(buttonFont);
+    joinButton.setFont(buttonFont);
+    randomizeShipButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
 
-        hostButton.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                hostButtonMouseClick(e);
-                hostButton.setEnabled(false);
-            }
-        });
-        joinButton.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                joinButtonMouseClick(e);
-                joinButton.setEnabled(false);
-            }
-        });
-        randomizeShipButton.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                randomizeButtonMouseClick(e);
-                randomizeShipButton.setEnabled(false);
-            }
-        });
+    // Set button alignment to center
+    hostButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+    joinButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+    randomizeShipButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        buttonPanel.add(hostButton);
-        buttonPanel.add(Box.createRigidArea(new Dimension(10,0)));
-        buttonPanel.add(joinButton);
-        buttonPanel.add(Box.createHorizontalGlue());
-        buttonPanel.add(randomizeShipButton);
-        buttonPanel.add(Box.createRigidArea(new Dimension(25, 0)));
+    buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
+    buttonPanel.setBackground(Color.DARK_GRAY);
+    buttonPanel.setPreferredSize(new Dimension(750, 1500));  // Use a fixed height or another suitable value
 
-        return buttonPanel;
-    }
+    // Add rigid area to center buttons vertically
+    buttonPanel.add(Box.createVerticalGlue());
+    
+    // Add buttons to the panel
+    buttonPanel.add(hostButton);
+    buttonPanel.add(Box.createRigidArea(new Dimension(10, 10)));
+    buttonPanel.add(joinButton);
+    buttonPanel.add(Box.createVerticalGlue());  // Use vertical glue instead of horizontal glue
+    buttonPanel.add(randomizeShipButton);
+    
+    // Add rigid area to center buttons vertically
+    buttonPanel.add(Box.createVerticalGlue());
+
+    hostButton.addMouseListener(new MouseAdapter() {
+        public void mouseClicked(MouseEvent e) {
+            hostButtonMouseClick(e);
+            hostButton.setEnabled(false);
+        }
+    });
+    joinButton.addMouseListener(new MouseAdapter() {
+        public void mouseClicked(MouseEvent e) {
+            joinButtonMouseClick(e);
+            joinButton.setEnabled(false);
+        }
+    });
+    randomizeShipButton.addMouseListener(new MouseAdapter() {
+        public void mouseClicked(MouseEvent e) {
+            randomizeButtonMouseClick(e);
+            randomizeShipButton.setEnabled(false);
+        }
+    });
+
+    return buttonPanel;
+}
+
+    
 
     //Function to initialize enemygrid
     private JPanel initializeEnemyGridPanel(Grid gameboard) {
@@ -283,17 +285,118 @@ private JPanel initializePlayerShipPanel() {
         throw new UnsupportedOperationException("Unimplemented method 'randomizeButtonMouseClick'");
     }
 
-    //Function to join game
     protected void joinButtonMouseClick(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'randomizeButtonMouseClick'");
+        JButton joinButton = (JButton) e.getSource();
+        joinButton.setText("Enter IP Address:");
+    
+        // Get the parent panel of the joinButton
+        Container buttonPanel = joinButton.getParent();
+    
+        // Create a JTextField for entering the IP address
+        JTextField ipAddressField = new JTextField();
+        ipAddressField.setMaximumSize(new Dimension(200, 30));
+    
+        // Create a JButton for submitting the entered IP address
+        JButton submitButton = new JButton("Submit");
+        submitButton.setMaximumSize(new Dimension(80, 30));
+    
+        // Set up a BoxLayout for the button panel
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+    
+        // Add the text field to the button panel
+        buttonPanel.add(Box.createVerticalGlue()); // Add glue for centering
+        buttonPanel.add(ipAddressField);
+        buttonPanel.add(Box.createVerticalGlue()); // Add glue for centering
+    
+        // Add the submit button to the button panel
+        buttonPanel.add(submitButton);
+        buttonPanel.add(Box.createVerticalGlue()); // Add glue for centering
+    
+        // Disable other buttons in the button panel
+        for (Component component : buttonPanel.getComponents()) {
+            if (component != joinButton && component != ipAddressField && component != submitButton) {
+                component.setVisible(false);
+            }
+        }
+    
+        // Disable the joinButton
+        joinButton.setEnabled(false);
+    
+        // Add an ActionListener to the submit button
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Retrieve the entered IP address using ipAddressField.getText()
+                String ipAddress = ipAddressField.getText();
+                // Perform actions related to joining the game with the specified IP address
+    
+                // For example, you might want to initiate a connection to the specified IP
+                // and perform necessary actions based on the success of the connection.
+    
+                // After handling the connection, you can enable the joinButton and remove the text field and submit button:
+                joinButton.setEnabled(true);
+                ipAddressField.setVisible(false);
+                submitButton.setVisible(false);
+    
+                // Enable other buttons in the button panel
+                for (Component component : buttonPanel.getComponents()) {
+                    if (component != joinButton && component != ipAddressField && component != submitButton) {
+                        component.setVisible(true);
+                    }
+                }
+            }
+        });
     }
+    
+    
+    
+    
+    
+    
+    
+    
 
-    //Function to host game
     protected void hostButtonMouseClick(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'hostButtonMouseClick'");
+        JButton hostButton = (JButton) e.getSource();
+        hostButton.setText("Waiting for opponent...");
+    
+        // Get the parent panel of the hostButton
+        Container buttonPanel = hostButton.getParent();
+    
+        // Iterate through the components of the panel
+        for (Component component : buttonPanel.getComponents()) {
+            // Check if the component is a button and not the hostButton itself
+            if (component instanceof JButton && component != hostButton) {
+                component.setVisible(false);
+            }
+        }
+    
+        Timer timer = new Timer(500, new ActionListener() {
+            private int count = 0;
+    
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                count = (count + 1) % 3;
+                String dots = ".".repeat(count + 1);
+                hostButton.setText("Waiting for opponent" + dots);
+            }
+        });
+    
+        timer.start();
+        // Here you might want to perform any necessary actions related to hosting the game
+        // For example, start a server or initiate the connection process.
+    
+        // To stop the timer and show the other buttons when needed (e.g., when the opponent is found), use:
+        // timer.stop();
+        // for (Component component : buttonPanel.getComponents()) {
+        //     if (component instanceof JButton && component != hostButton) {
+        //         component.setVisible(true);
+        //     }
+        // }
     }
+    
+    
+    
 
     public ImageIcon createImageIcon(String path, String description) {
         java.net.URL imgURL = getClass().getResource(path);
