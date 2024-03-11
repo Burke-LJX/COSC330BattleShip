@@ -148,8 +148,6 @@ class PlayerGrid extends Grid {
     
             if (targetTile.isOccupied()) {
                 System.out.println("Hit!");
-                //Add function that inrements hitCount for the ship type
-                Ship.ShipType hitShipType = targetTile.getShipType();
                 return true;
             } else {
                 System.out.println("Miss!");

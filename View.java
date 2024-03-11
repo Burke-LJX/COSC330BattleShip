@@ -12,7 +12,7 @@ public class View extends Grid{
         //Set game frame attributes
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameWindow.setLocationRelativeTo(null);
-        gameWindow.setSize(1000, 800);
+        gameWindow.setSize(1000, 1000);
         createAndShowMainScreen();
 
         gameWindow.setVisible(true);
@@ -22,22 +22,24 @@ public class View extends Grid{
         JPanel mainScreen = new JPanel();
         JPanel playerGridPanel;
         JPanel playerShipPanel;
-        JPanel enemyDisplayPanel;
+        JPanel enemyShipPanel;
+        JPanel enemyGridPanel;
         Grid gameboard = new Grid();
+        Grid eboard = new Grid();
 
         mainScreen.setLayout(new BoxLayout(mainScreen, BoxLayout.PAGE_AXIS));
         mainScreen.setBackground(Color.DARK_GRAY);
 
         //Create mainScreen layout
 
-        /*Create enemyDisplay
-        Bar horizontal across top that holds enemy ship displays
-        */
+        /*Create enemyDisplay */
         Box enemyBox = new Box(BoxLayout.LINE_AXIS);
-        //enemyBox.setSize(new Dimension(mainScreen.getWidth(), 200));
-        enemyDisplayPanel = initializeEnemyDisplay(mainScreen.getWidth());
+        enemyBox.setSize(new Dimension(500, 200));
+        enemyShipPanel = initializeEnemyDisplay(500);
+        enemyGridPanel = initializeEnemyGrid(eboard);
 
-        enemyBox.add(enemyDisplayPanel);
+        enemyBox.add(enemyGridPanel);
+        enemyBox.add(enemyShipPanel);
         mainScreen.add(enemyBox);
         Box playerBox = new Box(BoxLayout.LINE_AXIS);
 
@@ -47,7 +49,7 @@ public class View extends Grid{
         playerShipPanel = initializePlayerShipPanel(mainScreen.getHeight());
 
         //Add player display to playerBox and then mainScreen
-        //playerGridPanel.setSize(new Dimension(500,500));
+        playerGridPanel.setSize(new Dimension(500,500));
 
         playerBox.add(playerGridPanel);
         playerBox.add(playerShipPanel);
@@ -61,6 +63,36 @@ public class View extends Grid{
         gameWindow.add(mainScreen);
     }
 
+    //Function to initialize enemy grid
+    private JPanel initializeEnemyGrid(Grid gameboard) {
+        JPanel enemyGridPanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
+        JButton[][] enemyGrid = new JButton[GRIDSIZE][GRIDSIZE];
+
+        //Creating Buttons for playerGrid and gameboard
+        for(int row = 0; row < GRIDSIZE; row++) {
+            for(int column = 0; column < GRIDSIZE; column++) {
+                Tile temp = gameboard.getTile(row, column);
+                JButton buttonTile = new JButton();
+                buttonTile.setBackground(Color.BLUE);
+                buttonTile.setSize(new Dimension(10,10));
+                    
+    
+                enemyGrid[row][column] = buttonTile;
+                temp.setTileButton(buttonTile);
+                buttonTile.addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent evt) {
+                        enemyButtonTileClicked(evt);
+                    }
+                });
+    
+    
+            enemyGridPanel.add(buttonTile);
+            }
+        }
+
+        return enemyGridPanel;
+    }
+
     //Function to initialize enemy display
     private JPanel initializeEnemyDisplay(int windowWidth) {
         JPanel enemyDisplayPanel = new JPanel();
@@ -69,7 +101,6 @@ public class View extends Grid{
 
         Box panelTitleBox = new Box(BoxLayout.LINE_AXIS);
         JLabel panelTitle = new JLabel();
-        //panelTitleBox.setSize(new Dimension(windowWidth, 30));
         panelTitle.setForeground(Color.WHITE);
         panelTitle.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
         panelTitle.setText("Enemy Ships Left");
@@ -89,7 +120,7 @@ public class View extends Grid{
             ImageIcon shipIcon = createImageIcon(path, "Enemy Ship Image");
             JLabel shipLabel = new JLabel(shipIcon);
             shipLabel.setFocusable(false);
-            shipLabel.setSize(new Dimension(100, 50));
+            shipLabel.setSize(new Dimension(50, 50));
             shipLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             enemyShipImgBox.add(shipLabel);
             enemyShipImgBox.add(Box.createHorizontalGlue());
@@ -136,7 +167,7 @@ public class View extends Grid{
     private JPanel initializePlayerShipPanel(int windowHeight) {
         JPanel shipPanel = new JPanel();
         shipPanel.setLayout(new BoxLayout(shipPanel, BoxLayout.PAGE_AXIS));
-        //shipPanel.setPreferredSize(new Dimension(200, windowHeight));
+        shipPanel.setPreferredSize(new Dimension(200, windowHeight));
         shipPanel.setBackground(Color.GRAY);
         Border shipPanelBorder = createShipPanelBorder();
         shipPanel.setBorder(shipPanelBorder);

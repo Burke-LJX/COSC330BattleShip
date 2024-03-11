@@ -2,7 +2,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
         // Create players and grids
         PlayerGrid player1Grid = new PlayerGrid();
         PlayerGrid player2Grid = new PlayerGrid();
