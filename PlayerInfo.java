@@ -3,7 +3,6 @@ public class PlayerInfo {
     private int numShips;
     private boolean gameStatus;
     private boolean turnActive;
-    
 
     public PlayerInfo(int playerNumber, int numShips) {
         this.playerNumber = playerNumber;
