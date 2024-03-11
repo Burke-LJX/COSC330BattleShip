@@ -27,9 +27,15 @@ public class BattleshipView extends Grid{
         Grid gameboard = new Grid();
         Grid eboard = new Grid();
     
-        mainScreen.setLayout(new BoxLayout(mainScreen, BoxLayout.LINE_AXIS));
+        mainScreen.setLayout(new BoxLayout(mainScreen, BoxLayout.PAGE_AXIS));
         mainScreen.setBackground(Color.DARK_GRAY);
-        
+        Box topBox = new Box(BoxLayout.LINE_AXIS);
+        Box mainBox = new Box(BoxLayout.LINE_AXIS);
+        Box bottomBox = new Box(BoxLayout.PAGE_AXIS);
+
+        //use topBox to hold titles for player v enemy side?
+        mainScreen.add(topBox);
+
         Box playerBox = new Box(BoxLayout.PAGE_AXIS);
         // Create and customize playerGridPanel
         playerGridPanel = initializePlayerGridPanel(gameboard);
@@ -37,21 +43,26 @@ public class BattleshipView extends Grid{
         playerShipPanel = initializePlayerShipPanel();
         playerBox.add(playerGridPanel);
         playerBox.add(playerShipPanel);
-        mainScreen.add(playerBox);
+        mainBox.add(playerBox);
 
-        mainScreen.add(Box.createHorizontalGlue());
+        mainBox.add(Box.createHorizontalGlue());
 
-        // Create enemyDisplay
+        //Create enemyDisplay
         Box enemyBox = new Box(BoxLayout.PAGE_AXIS);
         enemyShipPanel = initializeEnemyDisplay();
         enemyGridPanel = initializeEnemyGridPanel(eboard);
         enemyBox.add(enemyGridPanel);
         enemyBox.add(enemyShipPanel);
-        mainScreen.add(enemyBox);
+        mainBox.add(enemyBox);
+
+        mainScreen.add(mainBox);
  
     
-        // Creating button menu at the bottom left of the frame: randomize ships, maybe host and join?
+        //Creating button menu at the bottom left of the frame: randomize ships, maybe host and join?
         JPanel buttonPanel = initializeButtonPanel(mainScreen.getWidth());
+        bottomBox.add(Box.createVerticalGlue());
+        bottomBox.add(buttonPanel);
+        mainScreen.add(bottomBox);
         
         gameWindow.add(mainScreen);
     }
@@ -68,7 +79,7 @@ private JPanel initializeEnemyDisplay() {
     enemyDisplayPanel.setLayout(new BoxLayout(enemyDisplayPanel, BoxLayout.PAGE_AXIS));
     enemyDisplayPanel.setBackground(Color.DARK_GRAY);
 
-    Box panelTitleBox = new Box(BoxLayout.LINE_AXIS);
+/*     Box panelTitleBox = new Box(BoxLayout.LINE_AXIS);
     JLabel panelTitle = new JLabel();
     panelTitle.setForeground(Color.WHITE);
     panelTitle.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
@@ -77,7 +88,7 @@ private JPanel initializeEnemyDisplay() {
     panelTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
     panelTitleBox.add(panelTitle);
 
-    enemyDisplayPanel.add(panelTitleBox);
+    enemyDisplayPanel.add(panelTitleBox); */
 
     Box enemyShipImgBox = new Box(BoxLayout.LINE_AXIS);
 
