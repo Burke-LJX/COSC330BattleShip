@@ -12,45 +12,47 @@ public class BattleshipView extends Grid{
         //Set game frame attributes
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameWindow.setLocationRelativeTo(null);
-        gameWindow.setSize(2000, 2000);
+        gameWindow.setSize(1500, 1500);
         createAndShowMainScreen();
 
         gameWindow.setVisible(true);
     }
 
     public void createAndShowMainScreen() {
-        JPanel mainScreen = new JPanel(new BorderLayout());  // Use BorderLayout for the mainScreen
+        JPanel mainScreen = new JPanel();  
         JPanel playerGridPanel;
         JPanel playerShipPanel;
-        JPanel enemyDisplayPanel;
+        JPanel enemyGridPanel;
+        JPanel enemyShipPanel;
         Grid gameboard = new Grid();
+        Grid eboard = new Grid();
     
+        mainScreen.setLayout(new BoxLayout(mainScreen, BoxLayout.LINE_AXIS));
         mainScreen.setBackground(Color.DARK_GRAY);
-    
-        // Create enemyDisplay
-        enemyDisplayPanel = initializeEnemyDisplay(mainScreen.getWidth());
-        mainScreen.add(enemyDisplayPanel, BorderLayout.EAST);
-    
-        // Create a panel to hold the player grid
-        JPanel playerPanelContainer = new JPanel(new BorderLayout());
-    
+        
+        Box playerBox = new Box(BoxLayout.PAGE_AXIS);
         // Create and customize playerGridPanel
         playerGridPanel = initializePlayerGridPanel(gameboard);
-        playerPanelContainer.add(playerGridPanel, BorderLayout.NORTH);  // Placing the grid in the top part
-    
-        // Add playerPanelContainer to the top left
-        mainScreen.add(playerPanelContainer, BorderLayout.WEST);
-    
         // Create and customize playerShipPanel
-        playerShipPanel = initializePlayerShipPanel(mainScreen.getHeight());
+        playerShipPanel = initializePlayerShipPanel();
+        playerBox.add(playerGridPanel);
+        playerBox.add(playerShipPanel);
+        mainScreen.add(playerBox);
+
+        mainScreen.add(Box.createHorizontalGlue());
+
+        // Create enemyDisplay
+        Box enemyBox = new Box(BoxLayout.PAGE_AXIS);
+        enemyShipPanel = initializeEnemyDisplay();
+        enemyGridPanel = initializeEnemyGridPanel(eboard);
+        enemyBox.add(enemyGridPanel);
+        enemyBox.add(enemyShipPanel);
+        mainScreen.add(enemyBox);
+ 
     
         // Creating button menu at the bottom left of the frame: randomize ships, maybe host and join?
         JPanel buttonPanel = initializeButtonPanel(mainScreen.getWidth());
-        JPanel bottomLeftPanel = new JPanel(new BorderLayout());
-        bottomLeftPanel.add(playerShipPanel, BorderLayout.CENTER);  // Placing the ships in the center
-        bottomLeftPanel.add(buttonPanel, BorderLayout.SOUTH);
-        mainScreen.add(bottomLeftPanel, BorderLayout.SOUTH);  // Placing the ships and buttons at the bottom
-    
+        
         gameWindow.add(mainScreen);
     }
     
@@ -61,7 +63,7 @@ public class BattleshipView extends Grid{
 
     
     // Function to initialize enemy display
-private JPanel initializeEnemyDisplay(int windowWidth) {
+private JPanel initializeEnemyDisplay() {
     JPanel enemyDisplayPanel = new JPanel();
     enemyDisplayPanel.setLayout(new BoxLayout(enemyDisplayPanel, BoxLayout.PAGE_AXIS));
     enemyDisplayPanel.setBackground(Color.DARK_GRAY);
@@ -71,6 +73,7 @@ private JPanel initializeEnemyDisplay(int windowWidth) {
     panelTitle.setForeground(Color.WHITE);
     panelTitle.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
     panelTitle.setText("Enemy Ships Left");
+    panelTitle.setPreferredSize(new Dimension(20, 30));
     panelTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
     panelTitleBox.add(panelTitle);
 
@@ -91,7 +94,7 @@ private JPanel initializeEnemyDisplay(int windowWidth) {
         JLabel shipLabel = new JLabel(shipIcon);
 
         // Set preferred size for the enemy ship images
-        shipLabel.setPreferredSize(new Dimension(40, 40));
+        shipLabel.setPreferredSize(new Dimension(20, 20));
 
         shipLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         enemyShipImgBox.add(shipLabel);
@@ -107,8 +110,7 @@ private JPanel initializeEnemyDisplay(int windowWidth) {
 
 
 
-    //Function to initialize player grid
-   //Function to initialize player grid
+
 // Function to initialize player grid
 private JPanel initializePlayerGridPanel(Grid gameboard) {
     JPanel playerPanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
@@ -141,7 +143,7 @@ private JPanel initializePlayerGridPanel(Grid gameboard) {
 
 
 //Function to initialize player ship panel
-private JPanel initializePlayerShipPanel(int windowHeight) {
+private JPanel initializePlayerShipPanel() {
     JPanel shipPanel = new JPanel();
     shipPanel.setLayout(new BoxLayout(shipPanel, BoxLayout.PAGE_AXIS));
     shipPanel.setBackground(Color.GRAY);
@@ -183,6 +185,7 @@ private JPanel initializePlayerShipPanel(int windowHeight) {
         Border compound = BorderFactory.createCompoundBorder(raisedbevel, loweredBevel);
         return compound;
     }
+
 
     //Function that creates and initializes ButtonPanel
     JPanel initializeButtonPanel(int windowWidth) {
@@ -229,6 +232,38 @@ private JPanel initializePlayerShipPanel(int windowHeight) {
         buttonPanel.add(Box.createRigidArea(new Dimension(25, 0)));
 
         return buttonPanel;
+    }
+
+    //Function to initialize enemygrid
+    private JPanel initializeEnemyGridPanel(Grid gameboard) {
+        //Function to initialize playerGridPanel
+        JPanel ePanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
+        JButton[][] eGrid = new JButton[GRIDSIZE][GRIDSIZE];
+    
+        //Creating Buttons for playerGrid and gameboard
+        for(int row = 0; row < GRIDSIZE; row++) {
+            for(int column = 0; column < GRIDSIZE; column++) {
+                Tile temp = gameboard.getTile(row, column);
+                JButton buttonTile = new JButton();
+                buttonTile.setBackground(Color.BLUE);
+                // Increase the preferred size of the buttons
+                buttonTile.setPreferredSize(new Dimension(40, 40));
+                    
+    
+                eGrid[row][column] = buttonTile;
+                temp.setTileButton(buttonTile);
+                buttonTile.addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent evt) {
+                        enemyButtonTileClicked(evt);
+                    }
+                });
+    
+    
+                ePanel.add(buttonTile);
+            }
+        }
+    
+        return ePanel;
     }
 
     //Function to randomize Ship placement for player
