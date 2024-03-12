@@ -217,8 +217,7 @@ JPanel initializeButtonPanel(int windowWidth) {
     buttonPanel.add(hostButton);
     buttonPanel.add(Box.createRigidArea(new Dimension(10, 10)));
     buttonPanel.add(joinButton);
-    buttonPanel.add(Box.createVerticalGlue());  // Use vertical glue instead of horizontal glue
-    buttonPanel.add(randomizeShipButton);
+
     
     // Add rigid area to center buttons vertically
     buttonPanel.add(Box.createVerticalGlue());
@@ -235,12 +234,7 @@ JPanel initializeButtonPanel(int windowWidth) {
             joinButton.setEnabled(false);
         }
     });
-    randomizeShipButton.addMouseListener(new MouseAdapter() {
-        public void mouseClicked(MouseEvent e) {
-            randomizeButtonMouseClick(e);
-            randomizeShipButton.setEnabled(false);
-        }
-    });
+
 
     return buttonPanel;
 }
