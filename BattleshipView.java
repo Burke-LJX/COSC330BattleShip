@@ -21,6 +21,7 @@ public class BattleshipView extends Grid{
 
     public void createAndShowMainScreen() {
         JPanel mainScreen = new JPanel(new BorderLayout());
+        JPanel topPanel = new JPanel();
         JPanel playerGridPanel;
         JPanel playerShipPanel;
         JPanel enemyGridPanel;
@@ -33,6 +34,8 @@ public class BattleshipView extends Grid{
         Box centerBox = new Box(BoxLayout.LINE_AXIS);
         Box bottomBox = new Box(BoxLayout.PAGE_AXIS);
     
+        topPanel = initializeTopPanel();
+        topBox.add(topPanel);
         mainScreen.add(topBox, BorderLayout.NORTH);
     
         // Create player panel
@@ -44,6 +47,7 @@ public class BattleshipView extends Grid{
     
         // Create center panel with buttonPanel
         JPanel centerPanel = new JPanel();
+        centerPanel.setBackground(Color.GRAY);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.PAGE_AXIS));  // Set the layout to PAGE_AXIS
         JPanel buttonPanel = initializeButtonPanel(mainScreen.getHeight());  // Use mainScreen.getHeight()
         centerPanel.add(Box.createVerticalGlue());
@@ -72,6 +76,20 @@ public class BattleshipView extends Grid{
         gameWindow.add(mainScreen);
     }
     
+    //Function to initialize top box of game window
+    private JPanel initializeTopPanel() {
+        JPanel topPanel = new JPanel();
+        JLabel gameTitle = new JLabel();
+        topPanel.setBackground(Color.BLACK);
+        gameTitle.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
+        gameTitle.setForeground(Color.GREEN);
+        gameTitle.setText("Battleship");
+        //Add labels for player side and enemy side, switch with turns?
+        topPanel.add(gameTitle);
+
+        return topPanel;
+    }
+
     // Function to initialize enemy display
     private JPanel initializeEnemyDisplay() {
         JPanel enemyDisplayPanel = new JPanel();
@@ -137,10 +155,11 @@ private JPanel initializePlayerGridPanel(Grid gameboard) {
 
 
 // Function to initialize player ship panel
+//Need to redo function to individually size ships so that they dont stretch
 private JPanel initializePlayerShipPanel() {
     JPanel shipPanel = new JPanel();
     shipPanel.setLayout(new BoxLayout(shipPanel, BoxLayout.PAGE_AXIS));
-    shipPanel.setBackground(Color.GRAY);
+    shipPanel.setBackground(Color.DARK_GRAY);
     Border shipPanelBorder = createShipPanelBorder();
     shipPanel.setBorder(shipPanelBorder);
 
@@ -207,7 +226,7 @@ JPanel initializeButtonPanel(int windowWidth) {
     randomizeShipButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
-    buttonPanel.setBackground(Color.DARK_GRAY);
+    buttonPanel.setBackground(Color.GRAY);
     buttonPanel.setPreferredSize(new Dimension(750, 1500));  // Use a fixed height or another suitable value
 
     // Add rigid area to center buttons vertically
