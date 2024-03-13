@@ -16,6 +16,7 @@ public class BattleshipController {
 	private ServerSocket server; // server socket
 	private Socket connection; // connection to client
 	private boolean isServer = true;
+    private boolean noWinner = true;
 
     private BattleshipModel model;
     private Scanner scanner;
@@ -28,16 +29,16 @@ public class BattleshipController {
     public void startGame() {
         boolean turn = false;
         // Initialize the game
-        model.initializeGame();
+        //model.initializeGame();
         if (GetIsServer()) {
             turn = true;
         }
         // Main game loop
-        while (true) {
+        while (noWinner) {
             if (turn) {
             // Display the player's grid
             System.out.println("Your Grid:");
-            model.getPlayerGrid().printGrid();
+            model.getPlayerGrid().printUserGrid();
 
             // Display opponent's grid (for testing purposes)
             System.out.println("Opponent's Grid:");
@@ -126,10 +127,11 @@ public class BattleshipController {
             System.out.println("IOException in ProcessConnection");
         }
     
-        if (message.equals("Congratulations! You have sunk all opponent's ships. You win!")) {
+        if (message.equals("Congratulations! You have sunk all your opponents ships. You win!")) {
             System.out.println(message);
+            noWinner = false;
             return " ";
-        } else if (message.equals("Hit!")) {
+        } else if (!message.equals("Miss!")) {
             int row = msg.charAt(0) - 'A';
             int col = Integer.parseInt(msg.substring(1));
             model.getOpponentGrid().getTile(row, col).shootTile();
@@ -140,6 +142,7 @@ public class BattleshipController {
             int row = msg.charAt(0) - 'A';
             int col = Integer.parseInt(msg.substring(1));
             model.getOpponentGrid().getTile(row, col).shootTile();
+            model.getOpponentGrid().getTile(row, col).setIsOcupied(false);
             System.out.println("Shot Result: ");
             return (String) message;
         }
@@ -147,59 +150,65 @@ public class BattleshipController {
     
 	
     public void WaitForMessage() {
-		//program will start by waiting for a message
-		try {
-			message = (String)input.readObject();
-		}
-		catch (ClassNotFoundException classNotFoundException){
-			System.out.print("Unknown Object Type Recieved");
-		}
-		catch (IOException ioException) {
-			System.out.print("IOException in ProcessConnection");
-		}
-		
-		// Process the player's move
+        // Program will start by waiting for a message
+        try {
+            message = (String)input.readObject();
+        }
+        catch (ClassNotFoundException classNotFoundException){
+            System.out.print("Unknown Object Type Received");
+        }
+        catch (IOException ioException) {
+            System.out.print("IOException in ProcessConnection");
+        }
+        
+        // Process the opponent's move
         if (isValidMoveFormat(message)) {
             int row = message.charAt(0) - 'A';
             int col = Integer.parseInt(message.substring(1));
-        
-            // Perform the attack
-            boolean hit = model.getPlayerGrid().attackTile(model.getPlayerGrid(), row, col);
-            while (!hit) {
-                System.out.println("Space has already been shot. Please enter a valid move (e.g., A3).");
-                message = scanner.nextLine().toUpperCase();
-                hit = model.getPlayerGrid().attackTile(model.getOpponentGrid(), row, col);
-            }
-            if (model.getPlayerGrid().getTile(row,col).isOccupied()) {
-                message = "Hit!";
-            } else {
+    
+            // Determine if the shot hits a ship
+            model.getPlayerGrid().attackTile(model.getPlayerGrid(), row, col);
+            boolean hit = model.getPlayerGrid().getTile(row, col).isOccupied();
+    
+            // Modify the message to include information about the hit ship and whether it's sunk
+            if (!hit) {
                 message = "Miss!";
+            } else {
+                Ship.ShipType hitShipType = model.getPlayerGrid().getTile(row, col).getShipType();
+                message = "You hit a " + hitShipType + "!";
+                
+                // Check if the hit ship has sunk
+                if (model.getPlayerGrid().checkShipSunk(hitShipType)) {
+                    message += " The " + hitShipType + " has been sunk!";
+                }
             }
-            // Check if all opponent's ships are sunk
-                        if (!model.getPlayerGrid().checkShips()) {
-                            message = ("Congratulations! You have sunk all opponent's ships. You win!");
-                            
-                        }
+    
+            // Check if all player's ships are sunk
+            if (!model.getPlayerGrid().checkShips()) {
+                message = "Congratulations! You have sunk all your opponents ships. You win!";
+            }
         } else {
-            System.out.println("Invalid move format. Please enter a valid move (e.g., A3).");
+            message = "Invalid move format. Please enter a valid move (e.g., A3).";
+        }
+    
+        // Send the result of the move to the opponent
+        try {
+            output.writeObject(message);
+        } catch (IOException ioException) {
+            System.out.print("Error Sending Message");
+        }
+    
+        // Display win message
+        if (message.equals("Congratulations! You have sunk all your opponents ships. You win!")) {
+            System.out.println("You Lost! Better Luck Next Time!");
+            noWinner = false;
         }
         
-		
-		//send the data back to the shooter of if it was a hit, miss, or they won
-		try {
-			output.writeObject(message);
-		}
-		catch (IOException ioException) {
-			System.out.print("Error Sending Message");
-		}
-		
-		//display loss message
-		if (message.equals("Congratulations! You have sunk all opponent's ships. You win!")) {
-			System.out.print("YOU LOST");
-		}
-		
-		//now it is this user's turn to shoot
-	}
+    }
+    
+    
+    
+    
 
 
     
