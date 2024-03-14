@@ -1,6 +1,11 @@
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.*;
 import javax.swing.*;
@@ -10,6 +15,7 @@ import javax.swing.border.Border;
 public class BattleshipView extends Grid{
     JFrame gameWindow = new JFrame("Battleship");
     private final int GRIDSIZE = 10;
+    private BattleshipModel model;
 
     BattleshipView() {
         //Set game frame attributes
@@ -30,8 +36,8 @@ public class BattleshipView extends Grid{
         JPanel playerShipPanel;
         JPanel enemyGridPanel;
         JPanel enemyShipPanel;
-        Grid gameboard = new Grid();
-        Grid eboard = new Grid();
+        PlayerGrid gameboard = new PlayerGrid();
+        PlayerGrid eboard = new PlayerGrid();
     
         mainScreen.setBackground(Color.DARK_GRAY);
         Box topBox = new Box(BoxLayout.LINE_AXIS);
@@ -123,17 +129,19 @@ public class BattleshipView extends Grid{
     }
     
     //Function to initialize enemygrid
-    private JPanel initializeEnemyGridPanel(Grid gameboard) {
+    private JPanel initializeEnemyGridPanel(PlayerGrid gameboard) {
         //Function to initialize playerGridPanel
         JPanel ePanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
         JButton[][] eGrid = new JButton[GRIDSIZE][GRIDSIZE];
+        String blankTileImgPath = "/images/blankTile.png";
+        ImageIcon blankTile = createImageIcon(blankTileImgPath, "Empty blue water tile");
     
         //Creating Buttons for playerGrid and gameboard
         for(int row = 0; row < GRIDSIZE; row++) {
             for(int column = 0; column < GRIDSIZE; column++) {
                 Tile temp = gameboard.getTile(row, column);
                 JButton buttonTile = new JButton();
-                buttonTile.setBackground(Color.BLUE);
+                buttonTile.setIcon(blankTile);
                 // Increase the preferred size of the buttons
                 buttonTile.setPreferredSize(new Dimension(40, 40));
                     
@@ -161,7 +169,7 @@ public class BattleshipView extends Grid{
 private JPanel initializePlayerGridPanel(Grid gameboard) {
     JPanel playerPanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
     JButton[][] playerGrid = new JButton[GRIDSIZE][GRIDSIZE];
-    new DropTarget(playerPanel, DnDConstants.ACTION_COPY, new GridDropTargetListener();
+   
 
     // Creating Buttons for playerGrid and gameboard
     for (int row = 0; row < GRIDSIZE; row++) {
@@ -208,16 +216,7 @@ private JPanel initializePlayerShipPanel() {
         ImageIcon scaledIcon = scaleImageIcon(originalIcon, 500, 100);
 
         JLabel shipLabel = new JLabel(scaledIcon);
-        //Replace mouse adapter with shipDragListener or click/drag listener
-        shipLabel.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent event) {
-                //get referenced shipLabel and record initial coordinates of image
-            }
-            public void mouseDragged(MouseEvent event) {
-                //
-            }
-            public void mouseReleased(MouseEvent event)
-        });
+        shipLabel.addMouseListener(new ShipDragListener());
 
         shipLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         shipPanel.add(shipLabel);
@@ -300,9 +299,57 @@ JPanel initializeButtonPanel(int windowWidth) {
 
 
     //Function to randomize Ship placement for player
-    protected void randomizeButtonMouseClick(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'randomizeButtonMouseClick'");
+    protected void randomizeButtonMouseClick(MouseEvent e, PlayerGrid playerGrid) {
+       for(int i = 0; i < playerGrid.ships.length; i++ ) {
+        placeShipRandomly(playerGrid.ships[i]);
+       }
+    }
+
+    protected void placeShipRandomly(Ship ship) {
+        int size = ship.getSize();
+        int row, col;
+        boolean isHorizontal;
+
+        // Find a random position and orientation that avoids overlapping with existing ships
+        do {
+            row = (int) (Math.random() * 10);
+            col = (int) (Math.random() * 10);
+            isHorizontal = Math.random() < 0.5;
+        } while (!isLegalPlacement(row, col) || !isLegalPlacement(row, col, size, isHorizontal));
+
+        // Place the ship incrementally in the array
+        for (int i = 0; i < size; i++) {
+            if (isHorizontal) {
+                getTile(row, col + i).occupyTile(ship.getShipType());
+            } else {
+                getTile(row + i, col).occupyTile(ship.getShipType());
+            }
+        }
+
+        // Store the ship in the ships array at the first available position
+        for (int i = 0; i < ships.length; i++) {
+            if (ships[i] == null) {
+                ships[i] = ship;
+                break;
+            }
+        }
+    }
+
+    private boolean isLegalPlacement(int startRow, int startCol, int size, boolean isHorizontal) {
+        if (isHorizontal) {
+            for (int i = 0; i < size; i++) {
+                if (startCol + i >= 10 || getTile(startRow, startCol + i).isOccupied()) {
+                    return false;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (startRow + i >= 10 || getTile(startRow + i, startCol).isOccupied()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     protected void joinButtonMouseClick(MouseEvent e) {
@@ -428,80 +475,6 @@ JPanel initializeButtonPanel(int windowWidth) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'enemyButtonTileClicked'");
     }
-
-
-
-
-    /* // Listener for ship drag events for DnD
-    class ShipDragListener extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            draggedShip = (JLabel) e.getSource();
-            TransferHandler handler = draggedShip.getTransferHandler();
-            handler.exportAsDrag(draggedShip, e, TransferHandler.COPY);
-        }
-    }
-
-    // Listener for grid drop events
-    class GridDropTargetListener implements DropTargetListener {
-        @Override
-        public void dragEnter(DropTargetDragEvent dtde) {}
-
-        @Override
-        public void dragOver(DropTargetDragEvent dtde) {}
-
-        @Override
-        public void dropActionChanged(DropTargetDragEvent dtde) {}
-
-        @Override
-        public void dragExit(DropTargetEvent dte) {}
-
-        @Override
-        public void drop(DropTargetDropEvent dtde) {
-            try {
-                Transferable tr = dtde.getTransferable();
-                if (tr.isDataFlavorSupported(DataFlavor.imageFlavor)) {
-                    JLabel droppedShip = (JLabel) tr.getTransferData(DataFlavor.imageFlavor);
-                    // Here you can determine the drop location and update the player grid accordingly
-                    playerGridPanel.add(droppedShip); // For demonstration, just add the ship to the grid
-                    validate(); // Refresh the layout
-                    dtde.dropComplete(true);
-                    return;
-                }
-                dtde.rejectDrop();
-            } catch (Exception e) {
-                e.printStackTrace();
-                dtde.rejectDrop();
-            }
-        }
-    } */
-
-/*     private class ClickListener extends MouseAdapter{
-		public void mousePressed(MouseEvent event) {
-			prevPoint = event.getPoint();
-		}	
-	}
-    private class DragListener extends MouseMotionAdapter{
-    	public void mouseDragged(MouseEvent event) {
-    		Point currPoint = event.getPoint();
-    		int dx = (int) (currPoint.getX() - prevPoint.getX());
-    		int dy = (int) (currPoint.getY() - prevPoint.getY());
-    		
-    		imageUpperLeft.translate(dx, dy);
-    		prevPoint = currPoint;
-    		repaint();  		
-    	}
-		public void mouseReleased(MouseEvent event) {
-			
-			 //Get component at coordinates that mouse is released
-			 // if pGrid call function that checks/adds ship
-			 
-			Point releasePoint = event.getPoint();
-			Component tempComponent = getComponentAt(releasePoint);
-			
-		}
-	} */
-
 
 
     public static void main(String[] args) {
