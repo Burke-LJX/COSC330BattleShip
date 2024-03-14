@@ -11,6 +11,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import Ship.ShipType;
+
 
 public class BattleshipView extends Grid{
     JFrame gameWindow = new JFrame("Battleship");
@@ -326,10 +328,13 @@ JPanel initializeButtonPanel(int windowWidth) {
 
         // Place the ship incrementally in the array
         for (int i = 0; i < size; i++) {
+            ImageIcon[] shipImgArray = getChoppedShipImgs(ship.getShipType());
             if (isHorizontal) {
                 getTile(row, col + i).occupyTile(ship.getShipType());
+                getTile(row, col + i).getTileButton().setIcon(shipImgArray[i]);
             } else {
                 getTile(row + i, col).occupyTile(ship.getShipType());
+                getTile(row + i, col).getTileButton().setIcon(shipImgArray[i]);
             }
         }
 
@@ -508,7 +513,7 @@ JPanel initializeButtonPanel(int windowWidth) {
         }
     }
 
-    protected ImageIcon[] getChoppedShipImgs() {
+    protected ImageIcon[] getChoppedShipImgs(Ship.ShipType shiptype) {
         String[] destroyerImgPaths = {"/images/pDestroyerImg_01.png", "/images/pDestroyerImg_02.png"};
         String[] subImgPaths = {"/images/pSubImg_01.png", "/images/pSubImg_02.png", "/images/pSubImg_03.png"};
         String[] cruiserImgPaths = {"/images/pCruiserImg_01.png", "/images/pCruiserImg_02.png", "/images/pCruiserImg_03.png"};
@@ -537,7 +542,21 @@ JPanel initializeButtonPanel(int windowWidth) {
         ImageIcon carrierImg04 = createImageIcon(carrierImgPaths[3], "Part 4 of 5 of Player Carrier");
         ImageIcon carrierImg05 = createImageIcon(carrierImgPaths[4], "Part 5 of 5 of Player Carrier");
 
-
+        ImageIcon[] destroyerImgArray = {destroyerImg01, destroyerImg02};
+        ImageIcon[] subImgArray = {subImg01, subImg02, subImg03};
+        ImageIcon[] cruiserImgArray = {cruiserImg01, cruiserImg02, cruiserImg03};
+        ImageIcon[] battleshipImgArray = {battleshipImg01, battleshipImg02, battleshipImg03, battleshipImg04};
+        ImageIcon[] carrierImgArray = {carrierImg01, carrierImg02, carrierImg03, carrierImg04, carrierImg05};
+        if (shiptype == Ship.ShipType.DESTROYER)
+            return destroyerImgArray;
+        else if (shiptype == Ship.ShipType.SUBMARINE)
+            return subImgArray;
+        else if (shiptype == Ship.ShipType.CRUISER)
+            return cruiserImgArray;
+        else if (shiptype == Ship.ShipType.BATTLESHIP)
+            return battleshipImgArray;
+        else if (shiptype == Ship.ShipType.CARRIER)
+            return carrierImgArray;
     }
 
 
