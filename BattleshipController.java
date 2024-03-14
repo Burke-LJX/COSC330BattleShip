@@ -65,7 +65,7 @@ public class BattleshipController {
     public void RunServer() {
 		try {
 			System.out.println("Creating server");
-			server = new ServerSocket(12345, 100);
+			server = new ServerSocket(8080, 100);
 			System.out.println("Waiting For Connection");
 			WaitForConnection();
 			System.out.println("Connected");
@@ -89,9 +89,9 @@ public class BattleshipController {
 	}
 	
 	//starts the client
-	public void RunClient() {
+	public void RunClient(String IP) {
 		try {
-			ConnectToServer(); //will stay here until a connection is made
+			ConnectToServer(IP); //will stay here until a connection is made
 			GetStreams(); //recieves the streams from the server
 		}
 		catch (EOFException eofException) {
@@ -102,8 +102,8 @@ public class BattleshipController {
 		}
 	}
 	
-	private void ConnectToServer() throws IOException {
-		connection = new Socket( InetAddress.getByName( chatServer ), 12345 ); //connect to the server socket
+	private void ConnectToServer(String IP) throws IOException {
+		connection = new Socket( InetAddress.getByName( IP ), 8080 ); //connect to the server socket
 	}
 	
 	private void GetStreams() throws IOException {
@@ -244,7 +244,7 @@ public class BattleshipController {
 		}
 		else {
 			controller.SetIsServer(false);
-			controller.RunClient();
+			controller.RunClient(host);
 		}
 
         // Start the game
