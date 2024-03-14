@@ -36,8 +36,8 @@ public class BattleshipView extends Grid{
         JPanel playerShipPanel;
         JPanel enemyGridPanel;
         JPanel enemyShipPanel;
-        BattleshipModel.PlayerGrid gameboard = model.getPlayerGrid();
-        BattleshipModel.PlayerGrid enemyboard = model.getOpponentGrid();
+        PlayerGrid gameboard = new PlayerGrid();
+        PlayerGrid enemyboard = new PlayerGrid();
         String blankTileImgPath = "/images/blankTile.png";
         ImageIcon blankTile = createImageIcon(blankTileImgPath, "Empty blue water tile");
 
@@ -53,7 +53,7 @@ public class BattleshipView extends Grid{
     
         // Create player panel
         Box playerBox = new Box(BoxLayout.PAGE_AXIS);
-        playerGridPanel = initializePlayerGridPanel(gameboard);
+        playerGridPanel = initializePlayerGridPanel(gameboard, blankTile);
         playerShipPanel = initializePlayerShipPanel();
         playerBox.add(playerGridPanel);
         playerBox.add(playerShipPanel);
@@ -71,7 +71,7 @@ public class BattleshipView extends Grid{
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.PAGE_AXIS));
         enemyShipPanel = initializeEnemyDisplay();
-        enemyGridPanel = initializeEnemyGridPanel(enemyboard);
+        enemyGridPanel = initializeEnemyGridPanel(enemyboard, blankTile);
         rightPanel.add(enemyGridPanel);
         rightPanel.add(enemyShipPanel);
     
@@ -93,10 +93,17 @@ public class BattleshipView extends Grid{
     private JPanel initializeTopPanel() {
         JPanel topPanel = new JPanel();
         JLabel gameTitle = new JLabel();
+        JLabel pLabel = new JLabel("Player Side");
+        JLabel eLabel = new JLabel("Enemy Side");
         topPanel.setBackground(Color.BLACK);
         gameTitle.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
         gameTitle.setForeground(Color.GREEN);
         gameTitle.setText("Battleship");
+
+        pLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
+        eLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
+        pLabel.setForeground(Color.GREEN);
+        eLabel.setForeground(Color.GREEN);
         //Add labels for player side and enemy side, switch with turns?
         topPanel.add(gameTitle);
 
@@ -132,7 +139,7 @@ public class BattleshipView extends Grid{
     }
     
     //Function to initialize enemygrid
-    private JPanel initializeEnemyGridPanel(BattleshipModel.PlayerGrid gameboard, ImageIcon blankTile) {
+    private JPanel initializeEnemyGridPanel(PlayerGrid gameboard, ImageIcon blankTile) {
         //Function to initialize playerGridPanel
         JPanel ePanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
         JButton[][] eGrid = new JButton[GRIDSIZE][GRIDSIZE];
@@ -167,7 +174,7 @@ public class BattleshipView extends Grid{
 
 
 // Function to initialize player grid
-private JPanel initializePlayerGridPanel(BattleshipModel.PlayerGrid gameboard) {
+private JPanel initializePlayerGridPanel(PlayerGrid gameboard, ImageIcon blankTile) {
     JPanel playerPanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
     JButton[][] playerGrid = new JButton[GRIDSIZE][GRIDSIZE];
    
@@ -177,7 +184,7 @@ private JPanel initializePlayerGridPanel(BattleshipModel.PlayerGrid gameboard) {
         for (int column = 0; column < GRIDSIZE; column++) {
             Tile temp = gameboard.getTile(row, column);
             JButton buttonTile = new JButton();
-            buttonTile.setBackground(Color.BLUE);
+            buttonTile.setIcon(blankTile);
             
             // Increase the preferred size of the buttons
             buttonTile.setPreferredSize(new Dimension(40, 40));
@@ -301,11 +308,11 @@ JPanel initializeButtonPanel(int windowWidth) {
     //Function to randomize Ship placement for player
     protected void randomizeButtonMouseClick(MouseEvent e, BattleshipModel.PlayerGrid playerGrid) {
        for(int i = 0; i < playerGrid.ships.length; i++ ) {
-        placeShipRandomly(playerGrid.ships[i]);
+        placeShipRandomly(playerGrid.ships[i], playerGrid);
        }
     }
 
-    protected void placeShipRandomly(Ship ship) {
+    protected void placeShipRandomly(Ship ship, BattleshipModel.PlayerGrid playerGrid) {
         int size = ship.getSize();
         int row, col;
         boolean isHorizontal;
@@ -326,13 +333,6 @@ JPanel initializeButtonPanel(int windowWidth) {
             }
         }
 
-        // Store the ship in the ships array at the first available position
-        for (int i = 0; i < ships.length; i++) {
-            if (ships[i] == null) {
-                ships[i] = ship;
-                break;
-            }
-        }
     }
 
     private boolean isLegalPlacement(int startRow, int startCol, int size, boolean isHorizontal) {
@@ -473,7 +473,39 @@ JPanel initializeButtonPanel(int windowWidth) {
 
     protected void enemyButtonTileClicked(MouseEvent evt, PlayerGrid enemyGrid) {
         Object clickedTile = evt.getSource();
+        for(int r = 0; r < GRIDSIZE; r++) {
+            for(int c = 0; c < GRIDSIZE; c++) {
+                if (enemyGrid.getTile(r, c).getTileButton() == evt.getSource()) {
+                    attackTile(enemyGrid, r, c);
+                }
+            }
+        }
 
+    }
+
+    public void attackTile(PlayerGrid targetGrid, int row, int col) {
+        Tile targetTile = targetGrid.getTile(row, col);
+        String hitTilePath = "images/hitTileImg.png";
+        String missTilePath = "images/missTileImg.png";
+        ImageIcon hitTile = createImageIcon(hitTilePath, "Player hit a ship on this tile");
+        ImageIcon missTile = createImageIcon(missTilePath, "Player missed on this tile");
+
+        if (targetTile.isShot()) {
+            System.out.println("Already shot at this location!");
+            return;
+        }
+
+        targetTile.shootTile();
+
+        if (targetTile.isOccupied()) {
+            System.out.println("Hit!");
+            targetTile.getTileButton().setIcon(hitTile);
+            return;
+        } else {
+            System.out.println("Miss!");
+            targetTile.getTileButton().setIcon(missTile);
+            return;
+        }
     }
 
 
