@@ -22,6 +22,7 @@ public class Tile {
         this.isShot = true;
     }
 
+
     public boolean isOccupied() {
         return isOccupied;
     }
@@ -29,7 +30,9 @@ public class Tile {
     public boolean isShot() {
         return isShot;
     }
-
+    public void setIsOcupied(boolean occ) {
+        isOccupied = occ;
+    }
     public Ship.ShipType getShipType() {
         return shipType;
     }
