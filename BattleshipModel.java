@@ -1,7 +1,6 @@
 public class BattleshipModel {
     private PlayerGrid playerGrid;
     private PlayerGrid opponentGrid;
-    private PlayerInfo playerInformation;
 
     public BattleshipModel() {
         // Initialize the game in the constructor
@@ -63,26 +62,6 @@ public class BattleshipModel {
             }
             System.out.println();
         }
-
-        public void printUserGrid() {
-            System.out.println("  0 1 2 3 4 5 6 7 8 9");
-            for (int i = 0; i < 10; i++) {
-                char yAxisLabel = (char) ('A' + i);
-                System.out.print(yAxisLabel + " ");
-                for (int j = 0; j < 10; j++) {
-                    char status;
-                    if (gameBoard[i][j].isShot()) {
-                        status = gameBoard[i][j].isOccupied() ? 'X' : 'O';
-                    } else {
-                        status = gameBoard[i][j].isOccupied() ? 'A' : ' ';
-                    }
-                    System.out.print(status + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
-        
-        }
         
     
         public boolean isLegalPlacement(int row, int col) {
@@ -97,13 +76,12 @@ public class BattleshipModel {
             public PlayerGrid() {
                 super();
                 ships = new Ship[5];  // Assuming there are 5 ships in the game
+                initializeShips();
             }
         
             private void initializeShips() {
                 for (Ship.ShipType type : Ship.ShipType.values()) {
-                    //System.out.println(type);
                     Ship ship = new Ship(type);
-                    placeShipRandomly(ship);
                 }
             }
     
@@ -115,21 +93,9 @@ public class BattleshipModel {
                 }
                 return false;
             }
-
-            public boolean checkShipSunk(Ship.ShipType shipType) {
-                for (Ship ship : ships) {
-                    if (ship != null && ship.getShipType() == shipType && ship.getIsSunk()) {
-                        return true; // Ship of the specified type has been sunk
-                    }
-                }
-                return false; // Ship of the specified type has not been sunk
-            }
-        
-    
         
             private void placeShipRandomly(Ship ship) {
                 int size = ship.getSize();
-                //System.out.println(size);
                 int row, col;
                 boolean isHorizontal;
         
@@ -138,16 +104,14 @@ public class BattleshipModel {
                     row = (int) (Math.random() * 10);
                     col = (int) (Math.random() * 10);
                     isHorizontal = Math.random() < 0.5;
-                } while (!isLegalPlacement(row, col, size, isHorizontal));
+                } while (!isLegalPlacement(row, col) || !isLegalPlacement(row, col, size, isHorizontal));
         
                 // Place the ship incrementally in the array
                 for (int i = 0; i < size; i++) {
                     if (isHorizontal) {
                         getTile(row, col + i).occupyTile(ship.getShipType());
-                        //System.out.println("[" + row +" , " + (col + i) + "]");
                     } else {
                         getTile(row + i, col).occupyTile(ship.getShipType());
-                        //System.out.println("[" + (row+i) +" , " + col + "]");
                     }
                 }
         
@@ -199,38 +163,23 @@ public class BattleshipModel {
             }
         
             public boolean attackTile(PlayerGrid targetGrid, int row, int col) {
-    Tile targetTile = targetGrid.getTile(row, col);
-
-    if (targetTile.isShot()) {
-        System.out.println("Already shot at this location!");
-        return false;
-    }
-
-    targetTile.shootTile();
-
-    if (targetTile.isOccupied()) {
-        System.out.println("Hit!");
-        Ship.ShipType hitShipType = targetTile.getShipType();
-        Ship hitShip = null;
-        // Find the ship that was hit
-        for (Ship ship : targetGrid.ships) {
-            if (ship != null && ship.getShipType() == hitShipType) {
-                hitShip = ship;
-                break;
+                Tile targetTile = targetGrid.getTile(row, col);
+        
+                if (targetTile.isShot()) {
+                    System.out.println("Already shot at this location!");
+                    return false;
+                }
+        
+                targetTile.shootTile();
+        
+                if (targetTile.isOccupied()) {
+                    System.out.println("Hit!");
+                    return true;
+                } else {
+                    System.out.println("Miss!");
+                    return true;
+                }
             }
-        }
-        if (hitShip != null) {
-            hitShip.registerHit(); // Register the hit on the ship
-            if (hitShip.getIsSunk()) {
-                System.out.println("Opponent has sunk your " + hitShipType + "!");
-            }
-        }
-        return true;
-    } else {
-        System.out.println("Miss!");
-        return true;
-    }
-}
         }
     
 }
@@ -270,9 +219,9 @@ class Ship {
         hitCount++;
         if (hitCount == size) {
             isSunk = true;
-            //System.out.println(this.getShipType() + " has been sunk.");        }
+            System.out.println(this.getShipType() + " has been sunk.");        }
     }
-    }
+
     public boolean getIsSunk() {
         return isSunk;
     }

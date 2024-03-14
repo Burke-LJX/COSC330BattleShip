@@ -36,9 +36,12 @@ public class BattleshipView extends Grid{
         JPanel playerShipPanel;
         JPanel enemyGridPanel;
         JPanel enemyShipPanel;
-        PlayerGrid gameboard = new PlayerGrid();
-        PlayerGrid eboard = new PlayerGrid();
-    
+        BattleshipModel.PlayerGrid gameboard = model.getPlayerGrid();
+        BattleshipModel.PlayerGrid enemyboard = model.getOpponentGrid();
+        String blankTileImgPath = "/images/blankTile.png";
+        ImageIcon blankTile = createImageIcon(blankTileImgPath, "Empty blue water tile");
+
+
         mainScreen.setBackground(Color.DARK_GRAY);
         Box topBox = new Box(BoxLayout.LINE_AXIS);
         Box centerBox = new Box(BoxLayout.LINE_AXIS);
@@ -68,7 +71,7 @@ public class BattleshipView extends Grid{
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.PAGE_AXIS));
         enemyShipPanel = initializeEnemyDisplay();
-        enemyGridPanel = initializeEnemyGridPanel(eboard);
+        enemyGridPanel = initializeEnemyGridPanel(enemyboard);
         rightPanel.add(enemyGridPanel);
         rightPanel.add(enemyShipPanel);
     
@@ -129,13 +132,11 @@ public class BattleshipView extends Grid{
     }
     
     //Function to initialize enemygrid
-    private JPanel initializeEnemyGridPanel(PlayerGrid gameboard) {
+    private JPanel initializeEnemyGridPanel(BattleshipModel.PlayerGrid gameboard, ImageIcon blankTile) {
         //Function to initialize playerGridPanel
         JPanel ePanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
         JButton[][] eGrid = new JButton[GRIDSIZE][GRIDSIZE];
-        String blankTileImgPath = "/images/blankTile.png";
-        ImageIcon blankTile = createImageIcon(blankTileImgPath, "Empty blue water tile");
-    
+            
         //Creating Buttons for playerGrid and gameboard
         for(int row = 0; row < GRIDSIZE; row++) {
             for(int column = 0; column < GRIDSIZE; column++) {
@@ -150,7 +151,7 @@ public class BattleshipView extends Grid{
                 temp.setTileButton(buttonTile);
                 buttonTile.addMouseListener(new MouseAdapter() {
                     public void mouseClicked(MouseEvent evt) {
-                        enemyButtonTileClicked(evt);
+                        enemyButtonTileClicked(evt, gameboard);
                     }
                 });
     
@@ -166,7 +167,7 @@ public class BattleshipView extends Grid{
 
 
 // Function to initialize player grid
-private JPanel initializePlayerGridPanel(Grid gameboard) {
+private JPanel initializePlayerGridPanel(BattleshipModel.PlayerGrid gameboard) {
     JPanel playerPanel = new JPanel(new GridLayout(GRIDSIZE, GRIDSIZE));
     JButton[][] playerGrid = new JButton[GRIDSIZE][GRIDSIZE];
    
@@ -216,7 +217,6 @@ private JPanel initializePlayerShipPanel() {
         ImageIcon scaledIcon = scaleImageIcon(originalIcon, 500, 100);
 
         JLabel shipLabel = new JLabel(scaledIcon);
-        shipLabel.addMouseListener(new ShipDragListener());
 
         shipLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         shipPanel.add(shipLabel);
@@ -299,7 +299,7 @@ JPanel initializeButtonPanel(int windowWidth) {
 
 
     //Function to randomize Ship placement for player
-    protected void randomizeButtonMouseClick(MouseEvent e, PlayerGrid playerGrid) {
+    protected void randomizeButtonMouseClick(MouseEvent e, BattleshipModel.PlayerGrid playerGrid) {
        for(int i = 0; i < playerGrid.ships.length; i++ ) {
         placeShipRandomly(playerGrid.ships[i]);
        }
@@ -471,9 +471,9 @@ JPanel initializeButtonPanel(int windowWidth) {
         }
     }
 
-    protected void enemyButtonTileClicked(MouseEvent evt) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'enemyButtonTileClicked'");
+    protected void enemyButtonTileClicked(MouseEvent evt, PlayerGrid enemyGrid) {
+        Object clickedTile = evt.getSource();
+
     }
 
 
