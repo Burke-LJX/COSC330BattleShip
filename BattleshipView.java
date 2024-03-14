@@ -306,13 +306,13 @@ JPanel initializeButtonPanel(int windowWidth) {
 
 
     //Function to randomize Ship placement for player
-    protected void randomizeButtonMouseClick(MouseEvent e, BattleshipModel.PlayerGrid playerGrid) {
+    protected void randomizeButtonMouseClick(MouseEvent e, PlayerGrid playerGrid) {
        for(int i = 0; i < playerGrid.ships.length; i++ ) {
         placeShipRandomly(playerGrid.ships[i], playerGrid);
        }
     }
 
-    protected void placeShipRandomly(Ship ship, BattleshipModel.PlayerGrid playerGrid) {
+    protected void placeShipRandomly(Ship ship, PlayerGrid playerGrid) {
         int size = ship.getSize();
         int row, col;
         boolean isHorizontal;
@@ -506,6 +506,38 @@ JPanel initializeButtonPanel(int windowWidth) {
             targetTile.getTileButton().setIcon(missTile);
             return;
         }
+    }
+
+    protected ImageIcon[] getChoppedShipImgs() {
+        String[] destroyerImgPaths = {"/images/pDestroyerImg_01.png", "/images/pDestroyerImg_02.png"};
+        String[] subImgPaths = {"/images/pSubImg_01.png", "/images/pSubImg_02.png", "/images/pSubImg_03.png"};
+        String[] cruiserImgPaths = {"/images/pCruiserImg_01.png", "/images/pCruiserImg_02.png", "/images/pCruiserImg_03.png"};
+        String[] battleshipImgPaths = {"/images/pBattleshipImg_01.png", "/images/pBattleshipImg_02.png", "/images/pBattleshipImg_03.png", "/images/pBattleshipImg_04.png"};
+        String[] carrierImgPaths = {"/images/pCarriershipImg_01.png", "/images/pCarriershipImg_02.png", "/images/pCarriershipImg_03.png", "/images/pCarriershipImg_04.png", "/images/pCarriershipImg_05.png"};
+    
+        ImageIcon destroyerImg01 = createImageIcon(destroyerImgPaths[0], "Part 1 of 2 of Player Destroyer");
+        ImageIcon destroyerImg02 = createImageIcon(destroyerImgPaths[1], "Part 2 of 2 of Player Destroyer");
+
+        ImageIcon subImg01 = createImageIcon(subImgPaths[0], "Part 1 of 3 of Player Submarine");
+        ImageIcon subImg02 = createImageIcon(subImgPaths[1], "Part 2 of 3 of Player Submarine");
+        ImageIcon subImg03 = createImageIcon(subImgPaths[2], "Part 3 of 3 of Player Submarine");
+
+        ImageIcon cruiserImg01 = createImageIcon(cruiserImgPaths[0], "Part 1 of 3 of Player Cruiser");
+        ImageIcon cruiserImg02 = createImageIcon(cruiserImgPaths[1], "Part 2 of 3 of Player Cruiser");
+        ImageIcon cruiserImg03 = createImageIcon(cruiserImgPaths[2], "Part 3 of 3 of Player Cruiser");
+
+        ImageIcon battleshipImg01 = createImageIcon(battleshipImgPaths[0], "Part 1 of 4 of Player Battleship");
+        ImageIcon battleshipImg02 = createImageIcon(battleshipImgPaths[1], "Part 2 of 4 of Player Battleship");
+        ImageIcon battleshipImg03 = createImageIcon(battleshipImgPaths[2], "Part 3 of 4 of Player Battleship");
+        ImageIcon battleshipImg04 = createImageIcon(battleshipImgPaths[3], "Part 4 of 4 of Player Battleship");
+
+        ImageIcon carrierImg01 = createImageIcon(carrierImgPaths[0], "Part 1 of 5 of Player Carrier");
+        ImageIcon carrierImg02 = createImageIcon(carrierImgPaths[1], "Part 2 of 5 of Player Carrier");
+        ImageIcon carrierImg03 = createImageIcon(carrierImgPaths[2], "Part 3 of 5 of Player Carrier");
+        ImageIcon carrierImg04 = createImageIcon(carrierImgPaths[3], "Part 4 of 5 of Player Carrier");
+        ImageIcon carrierImg05 = createImageIcon(carrierImgPaths[4], "Part 5 of 5 of Player Carrier");
+
+
     }
 
 
